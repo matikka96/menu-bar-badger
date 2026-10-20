@@ -1,0 +1,20 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "About %@": {},
+    "Hide %@": {},
+    "Quit %@": {},
+    "Edit": {},
+    "Undo": {},
+    "Redo": {},
+    "Cut": {},
+    "Copy": {},
+    "Paste": {},
+    "Select All": {},
+    "Window": {},
+    "Minimize": {},
+    "Zoom": {},
+    "Close": {}
+  },
+  "version": "1.0"
+}

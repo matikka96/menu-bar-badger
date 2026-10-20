@@ -53,7 +53,7 @@
 |---|---|
 | `AppDelegate` | Builds the components at launch and owns them. Handles reopen and termination. |
 | `AppModel` | The single source of UI state: the config, one state for each monitored app (name, icon, running, active, badge, Dock item found), the permission state and the config error. It applies changes to the config through `ConfigStore`. |
-| `ConfigStore` | Reads, validates, writes and watches the config file. See [config-file.md](config-file.md). |
+| `ConfigStore` | Reads, validates, writes and watches the config file. It lives in `BadgerCore` (Foundation only). See [config-file.md](config-file.md). |
 | `DockReader` | An actor. It finds the Dock items, polls the badges and recovers from stale items and Dock restarts. It sends only changes to the model. See [dock-reader.md](dock-reader.md). |
 | `RunningApps` | Watches app launch, termination and activation through `NSWorkspace` and updates the model. |
 | `MenuBarController` | Keeps exactly one `StatusItemController` for each monitored app, in config order. |
@@ -71,7 +71,7 @@ and one model in the middle.
 A local Swift package with no AppKit dependency (Foundation and CoreGraphics only). It holds the rules that
 need unit tests:
 
-- the config types, their JSON codec and their validation, and the shortcut text format;
+- the config types, their JSON codec and their validation, the shortcut text format, and `ConfigStore` (file read, atomic write, folder watch);
 - the badge rules: the count parser and the red badge label;
 - the Dock item match rule, on plain values (bundle ID, title);
 - the attention rules: when the alert and the arrow show;
@@ -104,6 +104,7 @@ menu-bar-badger/
 ├── Config/                      Base.xcconfig, Debug.xcconfig, Release.xcconfig,
 │                                Local.xcconfig.example (Local.xcconfig is git-ignored)
 ├── docs/spec/
+├── Scripts/                     shell scripts that the Makefile calls (install.sh)
 ├── Makefile
 └── .github/workflows/
 ```

@@ -1,0 +1,8 @@
+#include "Base.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = com.matikka96.MenuBarBadger
+INFOPLIST_KEY_CFBundleDisplayName = MenuBarBadger
+
+SWIFT_COMPILATION_MODE = wholemodule
+SWIFT_OPTIMIZATION_LEVEL = -O
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym

@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unit tests
+        run: swift test --package-path Packages/BadgerCore
+      - name: Release build
+        run: |
+          xcodebuild -project MenuBarBadger.xcodeproj -scheme MenuBarBadger -configuration Release \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+            -quiet build

@@ -1,0 +1,4 @@
+// Copy this file to Local.xcconfig. Git ignores Local.xcconfig.
+// A stable signing identity keeps the Accessibility permission after each rebuild.
+DEVELOPMENT_TEAM = XXXXXXXXXX
+CODE_SIGN_IDENTITY = Apple Development

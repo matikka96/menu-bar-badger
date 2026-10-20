@@ -22,7 +22,7 @@
 
 | Argument | Effect |
 |---|---|
-| `-MBBConfigFile <path>` | Use this config file instead of `dev.config.json`. |
+| `-MBBConfigFile <path>` (a leading `~` is expanded) | Use this config file instead of `dev.config.json`. |
 | `-MBBStateFile <path>` | Write the debug state file to this path. See [testing.md](testing.md). |
 | `-MBBSkipWelcome YES` | Do not show the welcome window. |
 | `-MBBFakeDock <path>` | Read the badges from this JSON file (bundle ID to badge text) instead of the Dock. The UI tests use it, so they need no Accessibility permission. |
@@ -37,7 +37,7 @@
 | `make ui-test` | Run the XCUITest flows. |
 | `make e2e` | Build the fixtures and run the e2e smoke scenarios. It needs the Accessibility permission for the test host and takes the keyboard focus. |
 | `make install` | Build Release, quit the running Release copy (10 s limit), replace `/Applications/MenuBarBadger.app` with a roll-back on failure, and launch it. It refuses to run with a dirty tree or on a branch other than `main`. |
-| `make worktree NAME=<name>` | Create the worktree `/Users/masa/Documents/repos/worktrees/menu-bar-badger-<name>` on a new branch `<name>` from `dev`, and copy the local files that git does not track (`AGENTS.md`, `.local/`) into it. |
+| `make worktree NAME=<name>` | Create the worktree `/Users/masa/Documents/repos/worktrees/menu-bar-badger-<name>` on a new branch `<name>` from `dev`, and copy the local files that git does not track (`AGENTS.md`, `.local/` and `Config/Local.xcconfig`, when they exist) into it. |
 | `make release` | The release pipeline on the local Mac. See [ci-and-release.md](ci-and-release.md). |
 
 ## Acceptance criteria

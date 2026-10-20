@@ -1,0 +1,237 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* BadgerCore in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000020 /* BadgerCore */; };
+		A10000000000000000000002 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000021 /* KeyboardShortcuts */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A10000000000000000000003 /* MenuBarBadger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenuBarBadger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000004 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		A10000000000000000000005 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		A10000000000000000000006 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		A10000000000000000000007 /* Local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Local.xcconfig.example; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A10000000000000000000008 /* MenuBarBadger */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MenuBarBadger;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A10000000000000000000009 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* BadgerCore in Frameworks */,
+				A10000000000000000000002 /* KeyboardShortcuts in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1000000000000000000000A = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000008 /* MenuBarBadger */,
+				A1000000000000000000000B /* Config */,
+				A1000000000000000000000C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1000000000000000000000B /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000004 /* Base.xcconfig */,
+				A10000000000000000000005 /* Debug.xcconfig */,
+				A10000000000000000000006 /* Release.xcconfig */,
+				A10000000000000000000007 /* Local.xcconfig.example */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		A1000000000000000000000C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000003 /* MenuBarBadger.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1000000000000000000000D /* MenuBarBadger */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000000000000000000016 /* Build configuration list for PBXNativeTarget "MenuBarBadger" */;
+			buildPhases = (
+				A1000000000000000000000E /* Sources */,
+				A10000000000000000000009 /* Frameworks */,
+				A1000000000000000000000F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A10000000000000000000008 /* MenuBarBadger */,
+			);
+			name = MenuBarBadger;
+			packageProductDependencies = (
+				A10000000000000000000020 /* BadgerCore */,
+				A10000000000000000000021 /* KeyboardShortcuts */,
+			);
+			productName = MenuBarBadger;
+			productReference = A10000000000000000000003 /* MenuBarBadger.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A10000000000000000000010 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					A1000000000000000000000D = {
+						CreatedOnToolsVersion = 26.0;
+					};
+				};
+			};
+			buildConfigurationList = A10000000000000000000014 /* Build configuration list for PBXProject "MenuBarBadger" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1000000000000000000000A;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A10000000000000000000018 /* XCLocalSwiftPackageReference "Packages/BadgerCore" */,
+				A10000000000000000000019 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A1000000000000000000000C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1000000000000000000000D /* MenuBarBadger */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1000000000000000000000F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1000000000000000000000E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A10000000000000000000011 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A10000000000000000000005 /* Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		A10000000000000000000012 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A10000000000000000000006 /* Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		A10000000000000000000017 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		A10000000000000000000013 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A10000000000000000000014 /* Build configuration list for PBXProject "MenuBarBadger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000011 /* Debug */,
+				A10000000000000000000012 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000000000000000000016 /* Build configuration list for PBXNativeTarget "MenuBarBadger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000017 /* Debug */,
+				A10000000000000000000013 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A10000000000000000000018 /* XCLocalSwiftPackageReference "Packages/BadgerCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/BadgerCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A10000000000000000000019 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A10000000000000000000020 /* BadgerCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BadgerCore;
+		};
+		A10000000000000000000021 /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000019 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A10000000000000000000010 /* Project object */;
+}

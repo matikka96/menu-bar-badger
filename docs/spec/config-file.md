@@ -68,8 +68,8 @@ Rules for a write:
 
 ## Live reload
 
-- The app watches the folder of the file, not the file itself, because many editors replace a file when
-  they save it.
+- The app watches the folder of the file, because many editors replace a file when they save it. It also
+  watches the file itself, because a write in place (for example `echo >> file`) does not change the folder.
 - After a change, the app waits 0.3 s for more changes, then reads the file.
 - If the content is the same as the last content that the app wrote or read, the app does nothing.
 - A valid file replaces the whole config at once: the items, the styles and the shortcut change together.
