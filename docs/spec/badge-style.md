@@ -10,16 +10,16 @@ not a number ("new", "•").
 ## Red badge (`"redBadge"`)
 
 - No text next to the icon. A red capsule with white text shows on the top-right corner of the icon.
-- With a badge, the icon shrinks a little so that the capsule fits in the square of the icon. With no
-  badge, the plain icon shows at full size.
-- The capsule: the system red colour; the text in a 6.5 pt bold system font, so that "new" fits; a height of the text plus
-  4 pt; a width of the text plus 3 pt, but never narrower than its height, so a single digit gives a circle.
+- The icon keeps its full size with a badge. As a Dock badge does, the capsule extends 5 pt past the right
+  edge of the icon and 2 pt past its top edge, so that it covers less of the icon.
+- The capsule: the system red colour; the text in an 8 pt bold system font; a height of the text plus 4 pt;
+  a width of the text plus 4 pt, but never narrower than its height, so a single digit gives a circle.
 - **Label rules**, in this order:
   1. A **count above 99** shows "99+". A count is a text that starts with a digit, contains only digits and
      grouping marks (comma, period, space, no-break space, narrow no-break space, apostrophe), and can end
      with "+". "Above 99" means more than two digits after the leading zeros are removed. Examples that give
      "99+": "100", "123", "999+", "1,234", "1 234", a number with 20 digits.
-  2. Else a text whose capsule fits the width of the icon shows as it is. Examples: "1", "99", "007", "9+",
+  2. Else a text whose capsule is at most 22 pt wide shows as it is. Examples: "1", "99", "007", "9+",
      "99+", "1.5", "new", "•••".
   3. Else the label is one dot, "•". Examples: "hello", "1a2b", "+1234", ",1234".
 

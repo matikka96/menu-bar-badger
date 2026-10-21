@@ -2,7 +2,6 @@
   "sourceLanguage": "en",
   "strings": {
     "About %@": {},
-    "Hide %@": {},
     "Quit %@": {},
     "Edit": {},
     "Undo": {},
@@ -12,8 +11,6 @@
     "Paste": {},
     "Select All": {},
     "Window": {},
-    "Minimize": {},
-    "Zoom": {},
     "Close": {},
     "%@, %@ new": {
       "comment": "VoiceOver label of a menu bar item: the app name and its Dock badge."
@@ -35,7 +32,123 @@
     "%@ shows the Dock badges of your apps in the menu bar. To read the badges, it needs the Accessibility permission.": {},
     "Open Accessibility Settings": {},
     "%@ can read Dock badges now.": {},
-    "Add Apps…": {}
+    "Add Apps…": {},
+    "%@ %@": {
+      "comment": "The app name and its version, for example MenuBarBadger 1.0."
+    },
+    "%@ can't read Dock badges": {},
+    "%@ new": {
+      "comment": "The status of an app. The argument is its Dock badge, for example 3."
+    },
+    "A red arrow points to the item while the app is in the background.": {},
+    "About": {
+      "comment": "The button that opens the About panel."
+    },
+    "Add": {
+      "comment": "The button that adds the selected app."
+    },
+    "Add App": {},
+    "Added": {
+      "comment": "Shown next to an app that is already in the list."
+    },
+    "Alerts": {},
+    "Apps": {
+      "comment": "The title of a settings tab."
+    },
+    "Badge": {},
+    "Cancel": {},
+    "Choose an App": {},
+    "Choose from Finder…": {},
+    "Click + to add an app.": {},
+    "Click the field, then press the keys.": {},
+    "Color": {
+      "comment": "A choice for the icon of an app: the app's own colours."
+    },
+    "The icon keeps the app's colours.": {},
+    "The icon shows in black and white.": {},
+    "Config File": {},
+    "Create It": {
+      "comment": "The button that creates the missing config file."
+    },
+    "Dim": {
+      "comment": "A choice for “When there's nothing new”: the menu bar item is dimmed."
+    },
+    "Doesn't apply to Icon only.": {},
+    "For example, while an app is full screen.": {},
+    "General": {
+      "comment": "The title of a settings tab."
+    },
+    "Hide": {
+      "comment": "A choice for “When there's nothing new”: the menu bar item is hidden."
+    },
+    "Hide while the app isn't running": {},
+    "Icon": {
+      "comment": "The title of the setting that chooses Color or Monochrome for the icon of an app."
+    },
+    "Icon Only": {
+      "comment": "A choice for the badge style: only the icon shows."
+    },
+    "Launch at login": {},
+    "Menu Bar": {},
+    "Monochrome": {
+      "comment": "A choice for the icon of an app: one colour that matches the menu bar."
+    },
+    "Move %@ to the Applications folder to use this.": {},
+    "Needs your approval in System Settings.": {},
+    "No app matches “%@”.": {},
+    "No apps yet": {},
+    "Not installed": {},
+    "Not installed · %@": {
+      "comment": "The status of an app that is not installed. The argument is its bundle ID."
+    },
+    "Not running": {},
+    "Nothing new": {},
+    "Number": {
+      "comment": "A choice for the badge style: the badge number shows next to the icon."
+    },
+    "Number next to the icon.": {},
+    "Only the icon, with no alerts or arrows.": {},
+    "Open Login Items": {},
+    "Open System Settings": {},
+    "Point to new badges": {},
+    "Quit": {
+      "comment": "The button that quits the app."
+    },
+    "Red Badge": {
+      "comment": "A choice for the badge style: a red badge shows on the icon."
+    },
+    "Red badge on the icon.": {},
+    "Reload": {
+      "comment": "The button that reads the config file again."
+    },
+    "Remove": {
+      "comment": "A context menu item that removes an app from the list."
+    },
+    "Remove App": {},
+    "Running · %@ new": {
+      "comment": "The status of an app. The argument is its Dock badge, for example 3."
+    },
+    "Running · nothing new": {},
+    "Select an app": {},
+    "Shortcut to open settings": {},
+    "Show": {
+      "comment": "A choice for “When there's nothing new”: the menu bar item stays as it is."
+    },
+    "Show an alert when the menu bar is hidden": {},
+    "Show in Finder": {},
+    "The config file has an error": {},
+    "The config file is missing": {},
+    "The icon comes back when the app starts.": {},
+    "The icon is dimmed.": {},
+    "The icon is hidden until something arrives.": {},
+    "The icon stays as it is.": {},
+    "The JSON is not valid at line %lld, column %lld.": {},
+    "This app has no bundle ID.": {},
+    "This config file is from a newer version of %@.": {},
+    "Turn on %@ in Privacy & Security › Accessibility.": {},
+    "Use another key.": {},
+    "Use ⌘ or ⌃ in the shortcut.": {},
+    "When there's nothing new": {}
   },
   "version": "1.0"
 }

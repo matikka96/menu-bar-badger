@@ -5,7 +5,6 @@ import BadgerCore
 /// screen scale changes.
 final class ItemIcons {
     static let size: CGFloat = 18
-    private static let shrunkSize: CGFloat = 15
     private static let defaultSymbol = "app.badge"
 
     struct Source: Equatable {
@@ -16,8 +15,6 @@ final class ItemIcons {
 
     enum Variant {
         case plain
-        /// Gives room for the red badge capsule at the top-right corner.
-        case shrunk
         /// Grey for a Color icon. The button reduces the opacity.
         case dimmed
     }
@@ -41,7 +38,6 @@ final class ItemIcons {
         images[.plain] = plain
         switch variant {
         case .plain: return plain
-        case .shrunk: return shrunk(plain)
         case .dimmed: return plain.isTemplate ? plain : grey(plain)
         }
     }
@@ -49,13 +45,9 @@ final class ItemIcons {
     private func makePlain(for source: Source) -> NSImage {
         guard let appURL = source.appURL else { return Self.defaultIcon() }
         let icon = NSWorkspace.shared.icon(forFile: appURL.path)
-        if source.mode == .monochrome,
-           let template = MonochromeIcon.make(from: icon, size: Self.size, scale: source.scale) {
-            return template
-        }
         let sized = icon.copy() as? NSImage ?? icon
         sized.size = NSSize(width: Self.size, height: Self.size)
-        return sized
+        return source.mode == .monochrome ? grey(sized) : sized
     }
 
     private static func defaultIcon() -> NSImage {
@@ -64,16 +56,6 @@ final class ItemIcons {
             .withSymbolConfiguration(configuration) ?? NSImage()
         symbol.isTemplate = true
         return symbol
-    }
-
-    private func shrunk(_ image: NSImage) -> NSImage {
-        let canvas = NSSize(width: Self.size, height: Self.size)
-        let result = NSImage(size: canvas, flipped: false) { _ in
-            image.draw(in: NSRect(x: 0, y: 0, width: Self.shrunkSize, height: Self.shrunkSize))
-            return true
-        }
-        result.isTemplate = image.isTemplate
-        return result
     }
 
     private func grey(_ image: NSImage) -> NSImage {

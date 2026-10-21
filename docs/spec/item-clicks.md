@@ -26,7 +26,7 @@ A right click, or a Control-click, shows a menu under the item:
 | Open ‹App› | Step 2 of the left click. Disabled when the app is not installed. |
 | ‹App› Options… | Opens the settings window on the Apps tab with this app selected. |
 | — | separator |
-| Settings… | Opens the settings window on its last tab. |
+| Settings… | Opens the settings window on its last tab. The item has the SF Symbol `gearshape`. |
 | Check for Updates… | Sparkle. Only after the release work. |
 | Quit MenuBarBadger | Ends the app with a normal termination. |
 

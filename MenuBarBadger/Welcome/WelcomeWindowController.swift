@@ -11,6 +11,8 @@ final class WelcomeWindowController {
         self.openSettings = openSettings
     }
 
+    var isVisible: Bool { window?.isVisible == true }
+
     func show() {
         let window = window ?? makeWindow()
         self.window = window

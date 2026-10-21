@@ -6,7 +6,8 @@ lists with a detail pane.
 ## List
 
 - One row for each monitored app, in config order: the 24 pt app icon, the display name, and a status text
-  below the name in the secondary colour.
+  below the name in the secondary colour. With Monochrome, the icon shows in black and white, as in the
+  menu bar.
 - Status text:
   - "Not installed" when no app with the bundle ID is installed;
   - "Not running" when no instance runs;
@@ -32,12 +33,13 @@ With no selection, the detail pane shows "Select an app" in its centre.
 With a selected app:
 
 - Header: the 48 pt app icon, the display name, and a status line: "Running · 3 new", "Running · nothing
-  new", "Not running" or "Not installed · ‹bundle ID›".
+  new", "Not running" or "Not installed · ‹bundle ID›". The header icon follows the icon mode, as in the
+  list.
 - A grouped form:
 
 | Row | Control | Hint |
 |---|---|---|
-| Icon | Segmented: Color / Monochrome | "Color uses the app's own colours. Monochrome matches the menu bar." |
+| Icon | Segmented: Color / Monochrome | Color: "The icon keeps the app's colours." Monochrome: "The icon shows in black and white." |
 | Point to new badges | Switch | "A red arrow points to the item while the app is in the background." With Icon only: "Doesn't apply to Icon only." and the switch is disabled. |
 
 - A button "Open ‹App›" at the end of the form. It is disabled when the app is not installed.

@@ -69,4 +69,4 @@ Every control that a test uses has a fixed identifier: `appsList`, `appRow`, `ad
 `appIconMode`, `appArrow`, `openApp`, `searchApps`, `appResults`, `confirmAdd`, `cancelAdd`,
 `chooseFromFinder`, `badgeStyle`, `whenNothingNew`, `hideWhenNotRunning`, `alertWhenMenuBarHidden`,
 `launchAtLogin`, `openSettingsShortcut`, `showConfigFile`, `about`, `quit`, `accessibilityBanner`,
-`configErrorBanner`, `welcomeOpenSettings`, `welcomeAddApps`.
+`configErrorBanner`, `welcomeOpenSettings`, `welcomeAddApps`, `settingsTabs`.

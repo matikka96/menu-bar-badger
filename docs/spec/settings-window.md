@@ -2,11 +2,11 @@
 
 ## Structure
 
-- One window with toolbar tabs, as the HIG describes for app settings: **Apps** (SF Symbol
-  `square.grid.2x2`) and **General** (SF Symbol `gearshape`).
-- The window title is the name of the selected tab.
-- An `NSWindowController` owns the window. Each tab is a SwiftUI view in an `NSHostingController`. A
-  toolbar-style `NSTabViewController` is a good fit.
+- One window with a unified toolbar. The window title, the app name, is on the leading side. A segmented
+  control in the centre of the toolbar selects the tab: **Apps** or **General**. The toolbar shows no labels
+  and has no customization menu.
+- An `NSWindowController` owns the window. Each tab is a SwiftUI view in an `NSHostingController`, in an
+  `NSTabViewController` that shows no tabs of its own.
 - The window has a close button. Minimize and zoom are disabled. The width is fixed. The height fits the
   selected tab, and a tab change animates the height.
 - The window remembers its frame (autosave name `Settings`) and its last tab, also across relaunches. The
@@ -34,8 +34,9 @@ The window opens and comes to the front in these cases:
 ## Open rules
 
 - The window must come to the front, in front of the frontmost app, with the keyboard focus. The app stays
-  an agent app. If `NSApp.activate()` is not sufficient on macOS 26 or 27, find the smallest workaround
-  and write it into this file.
+  an agent app. On macOS 26, `NSApp.activate()` and `makeKeyAndOrderFront` are not sufficient from the
+  right-click menu of an item; `orderFrontRegardless()` after them brings the window to the front. The menu
+  opens the window only after the menu tracking ends, else the window does not keep the keyboard focus.
 - When the window is closed, an open shows it at its saved frame with fresh state: the login item state
   and the installed apps are read again.
 - When the window is already open, an open only brings it to the front. It keeps its frame, its tab, the
@@ -56,6 +57,8 @@ active:
 ## Layout rules
 
 - Use a SwiftUI `Form` with `.formStyle(.grouped)` and system controls only.
+- Spacing comes from a 4 pt scale of named constants. The content, the form sections and the footer keep
+  12 pt from the window edges, and 12 pt between the app list and the detail pane.
 - Each row has a title, an optional hint below it in the secondary colour, and the control at the trailing
   edge, centred vertically. A long hint wraps in its column; the control never moves below the title.
 - A change of a setting never changes the height of the window or moves other rows: give each hint the

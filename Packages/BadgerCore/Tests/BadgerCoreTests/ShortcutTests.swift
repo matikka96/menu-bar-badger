@@ -22,6 +22,24 @@ struct ShortcutTests {
         #expect(shortcut.text == "command+control+option+shift+b")
     }
 
+    @Test func everyKeyHasAKeyCodeThatGivesItBack() throws {
+        for key in Shortcut.keys {
+            let shortcut = try Shortcut(text: "command+shift+\(key)")
+            #expect(try Shortcut(carbonKeyCode: shortcut.carbonKeyCode, carbonModifiers: shortcut.carbonModifiers) == shortcut)
+        }
+    }
+
+    @Test func keyCodeErrors() {
+        let keypadEnter = 76
+        #expect(throws: Shortcut.KeyCodeError.unknownKeyCode(keypadEnter)) {
+            try Shortcut(carbonKeyCode: keypadEnter, carbonModifiers: 0x100)
+        }
+        let optionShift = 0x800 | 0x200
+        #expect(throws: Shortcut.ParseError.needsCommandOrControl) {
+            try Shortcut(carbonKeyCode: 0, carbonModifiers: optionShift)
+        }
+    }
+
     @Test func errors() {
         #expect(throws: Shortcut.ParseError.unknownKey("f21")) { try Shortcut(text: "command+f21") }
         #expect(throws: Shortcut.ParseError.repeatedModifier("shift")) { try Shortcut(text: "command+shift+shift+b") }

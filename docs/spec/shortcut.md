@@ -26,6 +26,8 @@ One global keyboard shortcut opens the settings window.
 - At load and at each live reload, the app gives the shortcut to KeyboardShortcuts.
 - When the user records a shortcut, the app writes it to the file. A recorded shortcut with no Command and
   no Control is refused, and the recorder shows "Use ⌘ or ⌃ in the shortcut."
+- A recorded key that is not in the list of keys is refused, and the recorder shows "Use another key." In
+  both cases, the recorder shows the shortcut from the file again.
 
 ## Acceptance criteria
 

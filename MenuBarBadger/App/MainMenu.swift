@@ -18,9 +18,9 @@ enum MainMenu {
     private static func appMenu() -> NSMenu {
         let name = AppInfo.name
         let menu = NSMenu()
-        menu.addItem(item(String(localized: "About \(name)"), #selector(NSApplication.orderFrontStandardAboutPanel(_:))))
+        menu.addItem(item(String(localized: "About \(name)"), #selector(AppDelegate.showAboutPanel(_:))))
         menu.addItem(.separator())
-        menu.addItem(item(String(localized: "Hide \(name)"), #selector(NSApplication.hide(_:)), "h"))
+        menu.addItem(item(String(localized: "Settings…"), #selector(AppDelegate.showSettings(_:)), ","))
         menu.addItem(.separator())
         menu.addItem(item(String(localized: "Quit \(name)"), #selector(NSApplication.terminate(_:)), "q"))
         return menu
@@ -42,9 +42,6 @@ enum MainMenu {
 
     private static func windowMenu() -> NSMenu {
         let menu = NSMenu(title: String(localized: "Window"))
-        menu.addItem(item(String(localized: "Minimize"), #selector(NSWindow.performMiniaturize(_:)), "m"))
-        menu.addItem(item(String(localized: "Zoom"), #selector(NSWindow.performZoom(_:))))
-        menu.addItem(.separator())
         menu.addItem(item(String(localized: "Close"), #selector(NSWindow.performClose(_:)), "w"))
         return menu
     }

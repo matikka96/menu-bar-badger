@@ -8,7 +8,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private static let dockLog = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MenuBarBadger", category: "dock")
 
     private let model = AppModel()
-    private let settingsWindow = SettingsWindowController()
+    private lazy var settingsWindow = SettingsWindowController(model: model)
+    private lazy var globalShortcut = GlobalShortcut(model: model)
     private var configStore: ConfigStore?
     private var reader: (any DockReading)?
     private var menuBar: MenuBarController?
@@ -16,6 +17,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var welcomeWindow: WelcomeWindowController?
     private var tasks: [Task<Void, Never>] = []
     private var screenObservers: [NSObjectProtocol] = []
+    private var hasBeenActive = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.mainMenu = MainMenu.make()
@@ -23,6 +25,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let isFirstLaunch = !FileManager.default.fileExists(atPath: ConfigLocation.fileURL.path)
         startConfigStore()
+        let settingsWindow = settingsWindow
+        globalShortcut.start { settingsWindow.open(.lastTab) }
 
         let openSettings: (SettingsRequest) -> Void = { [settingsWindow] in settingsWindow.open($0) }
         let menuBar = MenuBarController(model: model, openSettings: openSettings)
@@ -51,6 +55,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         configStore?.stop()
     }
 
+    /// A launch from Finder or Spotlight activates the app. A launch at login or in the background does not.
+    func applicationDidBecomeActive(_ notification: Notification) {
+        model.refreshLoginItemStatus()
+        guard !hasBeenActive else { return }
+        hasBeenActive = true
+        if welcomeWindow?.isVisible != true {
+            settingsWindow.open(.lastTab)
+        }
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        settingsWindow.open(.lastTab)
+        return false
+    }
+
+    @objc func showSettings(_ sender: Any?) {
+        settingsWindow.open(.lastTab)
+    }
+
+    @objc func showAboutPanel(_ sender: Any?) {
+        AboutPanel.show()
+    }
+
     private func startConfigStore() {
         let model = model
         let store = ConfigStore(fileURL: ConfigLocation.fileURL) { result in
@@ -60,6 +87,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             case .failure(let error): Self.log.error("Config error: \(String(describing: error))")
             }
         }
+        model.configStore = store
         store.start()
         configStore = store
     }

@@ -61,6 +61,13 @@ public final class ConfigStore {
         return try write(config)
     }
 
+    /// Writes the config only when the file does not exist, so that it never overwrites an edit of the user.
+    public func createMissingFile(with config: Config) throws {
+        guard !FileManager.default.fileExists(atPath: fileURL.path) else { return }
+        try write(config)
+        reload()
+    }
+
     @discardableResult
     private func write(_ config: Config) throws -> Bool {
         let data = ConfigCodec.encode(config)

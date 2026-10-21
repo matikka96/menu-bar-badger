@@ -21,6 +21,7 @@ final class StatusItemController: NSObject {
     private var state: AppState
     private var settings: MonitoredApp
     private var config: Config
+    private var pendingSettingsRequest: SettingsRequest?
     private var appearance: Appearance?
     private var backingObserver: NSObjectProtocol?
     private var defaultsObserver: NSObjectProtocol?
@@ -66,8 +67,8 @@ final class StatusItemController: NSObject {
         button.addSubview(redBadge)
         let corner = ItemIcons.size / 2
         NSLayoutConstraint.activate([
-            redBadge.trailingAnchor.constraint(equalTo: button.centerXAnchor, constant: corner),
-            redBadge.topAnchor.constraint(equalTo: button.centerYAnchor, constant: -corner),
+            redBadge.trailingAnchor.constraint(equalTo: button.centerXAnchor, constant: corner + RedBadgeView.trailingOverhang),
+            redBadge.topAnchor.constraint(equalTo: button.centerYAnchor, constant: -corner - RedBadgeView.topOverhang),
         ])
         backingObserver = NotificationCenter.default.addObserver(
             forName: NSWindow.didChangeBackingPropertiesNotification, object: nil, queue: .main
@@ -124,7 +125,7 @@ final class StatusItemController: NSObject {
         return Appearance(
             isVisible: !isHidden,
             icon: ItemIcons.Source(appURL: state.appURL, mode: settings.icon, scale: scale),
-            variant: isDimmed ? .dimmed : redBadgeLabel == nil ? .plain : .shrunk,
+            variant: isDimmed ? .dimmed : .plain,
             isDimmed: isDimmed,
             title: config.badgeStyle == .number ? badge : "",
             redBadgeLabel: redBadgeLabel,
@@ -154,6 +155,7 @@ final class StatusItemController: NSObject {
         menu.addItem(withTitle: String(localized: "\(state.name) Options…"), action: #selector(openAppOptions), keyEquivalent: "")
         menu.addItem(.separator())
         menu.addItem(withTitle: String(localized: "Settings…"), action: #selector(openLastSettings), keyEquivalent: "")
+            .image = NSImage(systemSymbolName: "gearshape", accessibilityDescription: nil)
         menu.addItem(withTitle: String(localized: "Quit \(AppInfo.name)"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "")
             .target = NSApp
         for item in menu.items where item.target == nil && !item.isSeparatorItem {
@@ -169,10 +171,23 @@ final class StatusItemController: NSObject {
     }
 
     @objc private func openAppOptions() {
-        openSettings(.apps(selecting: state.bundleID))
+        openSettingsAfterMenuCloses(.apps(selecting: state.bundleID))
     }
 
     @objc private func openLastSettings() {
-        openSettings(.lastTab)
+        openSettingsAfterMenuCloses(.lastTab)
+    }
+
+    /// A window that becomes key while the menu still tracks does not keep the focus. The default run loop mode
+    /// runs only after the tracking ends.
+    private func openSettingsAfterMenuCloses(_ request: SettingsRequest) {
+        pendingSettingsRequest = request
+        perform(#selector(openPendingSettings), with: nil, afterDelay: 0, inModes: [.default])
+    }
+
+    @objc private func openPendingSettings() {
+        guard let request = pendingSettingsRequest else { return }
+        pendingSettingsRequest = nil
+        openSettings(request)
     }
 }

@@ -12,11 +12,7 @@ in [item-clicks.md](item-clicks.md).
   2. else the SF Symbol `app.badge` as a template image.
 - **Icon mode** (per app, `apps[].icon`):
   - **Color** (default): the app icon in its own colours. Never a template image.
-  - **Monochrome**: a template image, so the system tints it for the light and the dark menu bar and for
-    the selected state.
-- The app makes the Monochrome image from the brightness of the app icon, not only from its alpha. A
-  template from the alpha of a macOS 26 app icon is only a filled rounded square. The filter must keep the
-  shape inside the icon visible. Tune it on real icons.
+  - **Monochrome**: the app icon in black and white, with no colour saturation. Never a template image.
 - The app makes each icon image one time and caches it. It makes the image again only when the app, the
   icon mode or the scale of the screen changes.
 
@@ -45,6 +41,4 @@ in [item-clicks.md](item-clicks.md).
 
 - The item width fits "1", "12" and "123" with no clipping.
 - No redraw occurs in 5 s while the badge stays the same.
-- Monochrome icons of Mail, Slack and Microsoft Teams are easy to recognise on a light and on a dark menu
-  bar.
 - VoiceOver reads the app name and the badge of an item.

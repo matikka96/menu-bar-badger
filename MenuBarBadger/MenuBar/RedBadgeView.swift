@@ -2,9 +2,15 @@ import AppKit
 
 /// The red capsule of the Red badge style. No system control draws a badge on a status item.
 final class RedBadgeView: NSView {
-    private static let font = NSFont.systemFont(ofSize: 6.5, weight: .bold)
-    private static let extraWidth: CGFloat = 3
+    private static let font = NSFont.systemFont(ofSize: 8, weight: .bold)
+    private static let extraWidth: CGFloat = 4
     private static let extraHeight: CGFloat = 4
+    /// The capsule of "99+" and of "new".
+    private static let maxWidth: CGFloat = 22
+    /// The capsule extends past the top-right corner of the icon, as a Dock badge does, so that it covers less of
+    /// the icon.
+    static let trailingOverhang: CGFloat = 5
+    static let topOverhang: CGFloat = 2
 
     static func size(of text: String) -> NSSize {
         let textWidth = (text as NSString).size(withAttributes: [.font: font]).width
@@ -13,7 +19,7 @@ final class RedBadgeView: NSView {
     }
 
     static func fits(_ text: String) -> Bool {
-        size(of: text).width <= ItemIcons.size
+        size(of: text).width <= maxWidth
     }
 
     private let label = NSTextField(labelWithString: "")

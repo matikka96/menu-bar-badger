@@ -1,4 +1,4 @@
-import Foundation
+import AppKit
 
 enum ConfigLocation {
     static var fileURL: URL {
@@ -8,6 +8,20 @@ enum ConfigLocation {
         }
         #endif
         return folderURL.appending(path: fileName)
+    }
+
+    static var displayPath: String {
+        (fileURL.path as NSString).abbreviatingWithTildeInPath
+    }
+
+    /// Selects the file in Finder, or opens its folder when the file is missing.
+    static func showInFinder() {
+        let url = fileURL
+        if FileManager.default.fileExists(atPath: url.path) {
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+        } else {
+            NSWorkspace.shared.open(url.deletingLastPathComponent())
+        }
     }
 
     private static var folderURL: URL {

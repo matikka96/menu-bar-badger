@@ -31,12 +31,12 @@ See [alert.md](alert.md).
 
 | Row | Control |
 |---|---|
-| The path, for example `~/.MenuBarBadger/config.json`, in a monospaced font, selectable | Button "Show in Finder" |
+| The path, for example `~/.MenuBarBadger/config.json`, in the body font, selectable | Button "Show in Finder" |
 
 ## Footer
 
-Below the form: "‹App name› ‹version›" in the secondary colour, and the buttons "About" (the standard About
-panel, `NSApp.orderFrontStandardAboutPanel`) and "Quit" (normal termination).
+Below the form: "‹App name› ‹version›" in the font of the row hints and the secondary colour, and the buttons
+"About" (the standard About panel, `NSApp.orderFrontStandardAboutPanel`) and "Quit" (normal termination).
 
 The About panel shows the app icon, the name, the version and the copyright line.
 

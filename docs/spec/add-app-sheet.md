@@ -12,14 +12,17 @@ A sheet on the settings window that adds one app to the list.
 
 ## Sources of the list
 
-- All application bundles that Spotlight knows: an `NSMetadataQuery` for
-  `kMDItemContentType == "com.apple.application-bundle"`. The query stays live while the sheet is open, so
-  an app that the user installs while the sheet is open shows at once.
-- All running apps with the regular activation policy, so that an app outside the Spotlight index still
-  shows while it runs.
+- The application bundles that Spotlight knows in `/Applications`, `/System/Applications` and
+  `~/Applications`, also in their subfolders: an `NSMetadataQuery` for
+  `kMDItemContentType == "com.apple.application-bundle"`. An app inside another app bundle does not show.
+- All running apps with the regular activation policy, so that an app outside these folders or outside the
+  Spotlight index still shows while it runs.
 - Each bundle ID shows one time. The Spotlight entry wins.
-- The sheet shows at once. The list fills when the query delivers its first results; until then, a small
-  progress indicator shows.
+- When Spotlight knows more than one copy of a bundle ID, the copy in `/Applications` or
+  `/System/Applications` wins.
+- The app loads the list at launch, and loads it again each time the settings window opens. Thus the sheet
+  shows the full list at once. Until the first query delivers its results, the list shows the running apps
+  and a small progress indicator.
 
 ## Behaviour
 

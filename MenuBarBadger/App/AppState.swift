@@ -33,7 +33,7 @@ struct AppState: Sendable, Equatable, Identifiable {
         isActive = instances.contains(where: \.isActive)
     }
 
-    private static func displayName(of appURL: URL) -> String {
+    static func displayName(of appURL: URL) -> String {
         let bundleName = (try? appURL.resourceValues(forKeys: [.localizedNameKey]).localizedName)
             ?? appURL.lastPathComponent
         return DisplayName.fromBundleName(bundleName)
