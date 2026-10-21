@@ -166,11 +166,11 @@ private struct AppOptions: View {
                         .accessibilityIdentifier("appIconMode")
                     }
                     SettingRow(
-                        "Point to new badges",
+                        "Show arrow for new badges",
                         hint: isIconOnly ? Self.iconOnlyHint : Self.arrowHint,
                         hintVariants: [Self.arrowHint, Self.iconOnlyHint]
                     ) {
-                        Toggle("Point to new badges", isOn: binding(\.arrow))
+                        Toggle("Show arrow for new badges", isOn: binding(\.arrow))
                             .toggleStyle(.switch)
                             .labelsHidden()
                             .disabled(isIconOnly)
@@ -197,7 +197,7 @@ private struct AppOptions: View {
         .color: Text("The icon keeps the app's colours."),
         .monochrome: Text("The icon shows in black and white."),
     ]
-    private static let arrowHint = Text("A red arrow points to the item while the app is in the background.")
+    private static let arrowHint = Text("A red arrow under the menu bar item points to a new badge. It stays until you click the item or open the app.")
     private static let iconOnlyHint = Text("Doesn't apply to Icon only.")
 
     private func binding<Value>(_ keyPath: WritableKeyPath<MonitoredApp, Value>) -> Binding<Value> {

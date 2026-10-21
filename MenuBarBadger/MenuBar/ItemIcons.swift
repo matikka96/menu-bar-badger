@@ -1,11 +1,12 @@
 import AppKit
 import BadgerCore
 
-/// The icon images of one item. Each image is made one time, and again only when the app, the icon mode or the
-/// screen scale changes.
+/// The icon images of one item or alert. Each image is made one time, and again only when the app, the icon mode or
+/// the screen scale changes.
 final class ItemIcons {
-    static let size: CGFloat = 18
+    static let itemSize: CGFloat = 18
     private static let defaultSymbol = "app.badge"
+    private static let defaultSymbolScale: CGFloat = 15 / 18
 
     struct Source: Equatable {
         var appURL: URL?
@@ -19,8 +20,13 @@ final class ItemIcons {
         case dimmed
     }
 
+    private let size: CGFloat
     private var source: Source?
     private var images: [Variant: NSImage] = [:]
+
+    init(size: CGFloat = itemSize) {
+        self.size = size
+    }
 
     func image(_ variant: Variant, for source: Source) -> NSImage {
         if source != self.source {
@@ -43,16 +49,16 @@ final class ItemIcons {
     }
 
     private func makePlain(for source: Source) -> NSImage {
-        guard let appURL = source.appURL else { return Self.defaultIcon() }
+        guard let appURL = source.appURL else { return defaultIcon() }
         let icon = NSWorkspace.shared.icon(forFile: appURL.path)
         let sized = icon.copy() as? NSImage ?? icon
-        sized.size = NSSize(width: Self.size, height: Self.size)
+        sized.size = NSSize(width: size, height: size)
         return source.mode == .monochrome ? grey(sized) : sized
     }
 
-    private static func defaultIcon() -> NSImage {
-        let configuration = NSImage.SymbolConfiguration(pointSize: 15, weight: .regular)
-        let symbol = NSImage(systemSymbolName: defaultSymbol, accessibilityDescription: nil)?
+    private func defaultIcon() -> NSImage {
+        let configuration = NSImage.SymbolConfiguration(pointSize: size * Self.defaultSymbolScale, weight: .regular)
+        let symbol = NSImage(systemSymbolName: Self.defaultSymbol, accessibilityDescription: nil)?
             .withSymbolConfiguration(configuration) ?? NSImage()
         symbol.isTemplate = true
         return symbol

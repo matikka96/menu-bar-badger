@@ -11,12 +11,18 @@ final class MenuBarController {
 
     private let model: AppModel
     private let openSettings: (SettingsRequest) -> Void
+    private let onItemClick: (String) -> Void
     private var items: [String: StatusItemController] = [:]
     private var observation: Task<Void, Never>?
 
-    init(model: AppModel, openSettings: @escaping (SettingsRequest) -> Void) {
+    init(model: AppModel, openSettings: @escaping (SettingsRequest) -> Void, onItemClick: @escaping (String) -> Void) {
         self.model = model
         self.openSettings = openSettings
+        self.onItemClick = onItemClick
+    }
+
+    func itemWindow(of bundleID: String) -> NSWindow? {
+        items[bundleID]?.itemWindow
     }
 
     func start() {
@@ -41,7 +47,8 @@ final class MenuBarController {
                 item.update(state: app, settings: settings, config: model.config)
             } else {
                 items[app.bundleID] = StatusItemController(
-                    state: app, settings: settings, config: model.config, openSettings: openSettings
+                    state: app, settings: settings, config: model.config,
+                    openSettings: openSettings, onClick: onItemClick
                 )
             }
         }

@@ -18,6 +18,7 @@ final class StatusItemController: NSObject {
     private let icons = ItemIcons()
     private let redBadge = RedBadgeView()
     private let openSettings: (SettingsRequest) -> Void
+    private let onClick: (String) -> Void
     private var state: AppState
     private var settings: MonitoredApp
     private var config: Config
@@ -26,11 +27,15 @@ final class StatusItemController: NSObject {
     private var backingObserver: NSObjectProtocol?
     private var defaultsObserver: NSObjectProtocol?
 
-    init(state: AppState, settings: MonitoredApp, config: Config, openSettings: @escaping (SettingsRequest) -> Void) {
+    init(
+        state: AppState, settings: MonitoredApp, config: Config,
+        openSettings: @escaping (SettingsRequest) -> Void, onClick: @escaping (String) -> Void
+    ) {
         self.state = state
         self.settings = settings
         self.config = config
         self.openSettings = openSettings
+        self.onClick = onClick
         position = ItemPosition(bundleID: state.bundleID)
         position.restore()
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -38,6 +43,11 @@ final class StatusItemController: NSObject {
         super.init()
         setUpButton()
         redraw()
+    }
+
+    /// Nil while the item is hidden.
+    var itemWindow: NSWindow? {
+        statusItem.isVisible ? statusItem.button?.window : nil
     }
 
     func update(state: AppState, settings: MonitoredApp, config: Config) {
@@ -65,7 +75,7 @@ final class StatusItemController: NSObject {
         button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         button.font = .monospacedDigitSystemFont(ofSize: NSFont.menuBarFont(ofSize: 0).pointSize, weight: .regular)
         button.addSubview(redBadge)
-        let corner = ItemIcons.size / 2
+        let corner = ItemIcons.itemSize / 2
         NSLayoutConstraint.activate([
             redBadge.trailingAnchor.constraint(equalTo: button.centerXAnchor, constant: corner + RedBadgeView.trailingOverhang),
             redBadge.topAnchor.constraint(equalTo: button.centerYAnchor, constant: -corner - RedBadgeView.topOverhang),
@@ -116,7 +126,7 @@ final class StatusItemController: NSObject {
     private func makeAppearance() -> Appearance {
         let badge = state.badge
         let isNothingNew = badge.isEmpty
-        let isHidden = (config.whenNothingNew == .hide && isNothingNew) || (config.hideWhenNotRunning && !state.isRunning)
+        let isHidden = ItemVisibility.isHidden(badge: badge, isRunning: state.isRunning, config: config)
         let isDimmed = config.whenNothingNew == .dim && isNothingNew
         let redBadgeLabel = config.badgeStyle == .redBadge && !isNothingNew
             ? RedBadgeLabel.label(for: badge, fits: RedBadgeView.fits)
@@ -137,6 +147,7 @@ final class StatusItemController: NSObject {
     }
 
     @objc private func buttonClicked() {
+        onClick(state.bundleID)
         let event = NSApp.currentEvent
         if event?.type == .rightMouseUp || event?.modifierFlags.contains(.control) == true {
             showMenu()

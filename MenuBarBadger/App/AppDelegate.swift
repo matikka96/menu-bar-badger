@@ -13,6 +13,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var configStore: ConfigStore?
     private var reader: (any DockReading)?
     private var menuBar: MenuBarController?
+    private var attention: AttentionController?
     private var runningApps: RunningApps?
     private var welcomeWindow: WelcomeWindowController?
     private var tasks: [Task<Void, Never>] = []
@@ -29,9 +30,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         globalShortcut.start { settingsWindow.open(.lastTab) }
 
         let openSettings: (SettingsRequest) -> Void = { [settingsWindow] in settingsWindow.open($0) }
-        let menuBar = MenuBarController(model: model, openSettings: openSettings)
+        let attention = AttentionController(model: model)
+        let menuBar = MenuBarController(model: model, openSettings: openSettings) { attention.dismiss(bundleID: $0) }
         menuBar.start()
         self.menuBar = menuBar
+        attention.start { [weak menuBar] in menuBar?.itemWindow(of: $0) }
+        self.attention = attention
 
         let reader = makeReader()
         self.reader = reader

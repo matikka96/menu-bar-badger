@@ -40,7 +40,7 @@ With a selected app:
 | Row | Control | Hint |
 |---|---|---|
 | Icon | Segmented: Color / Monochrome | Color: "The icon keeps the app's colours." Monochrome: "The icon shows in black and white." |
-| Point to new badges | Switch | "A red arrow points to the item while the app is in the background." With Icon only: "Doesn't apply to Icon only." and the switch is disabled. |
+| Show arrow for new badges | Switch | "A red arrow under the menu bar item points to a new badge. It stays until you click the item or open the app." With Icon only: "Doesn't apply to Icon only." and the switch is disabled. |
 
 - A button "Open ‹App›" at the end of the form. It is disabled when the app is not installed.
 - A change writes the config file at once and changes the item at once.

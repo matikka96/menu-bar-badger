@@ -1,6 +1,6 @@
 # Arrow
 
-A small glass capsule with a red arrow under an item. It points to a new badge while the app is in the
+A small red arrow under an item, with no background. It points to a new badge while the app is in the
 background. It is an opt-in for each app (`apps[].arrow`).
 
 ## When the arrow shows
@@ -31,32 +31,40 @@ The arrow has no timeout. It stays until one of these events.
 
 ## Look
 
-- A capsule with the system glass material (`NSGlassEffectView`), 32 pt wide and 44 pt high.
-- In its centre, the SF Symbol `arrow.up` with the semibold weight, 22 pt, in the system red colour.
-- The system shadow.
+- The SF Symbol `arrow.up` with the bold weight, 33 pt, in the system red colour, in the centre of a
+  42 × 42 pt transparent window.
+- The system shadow of the window, around the symbol.
 
 ## Animation
 
-- The capsule appears with a fade of 0.2 s.
+- The arrow appears with a fade of 0.2 s.
 - The symbol plays the SF Symbols effect `.bounce.up` three times, then stays still.
 - When the arrow shows again while it is still visible (a new qualifying badge), the symbol bounces one more
-  time. The capsule does not fade again.
-- With Reduce Motion on: no fade and no bounce.
+  time. The arrow does not fade again.
+- The arrow goes away with a flight to the north under the menu bar: the window goes one level below the menu
+  bar (`.mainMenu` − 1), and in 0.3 s with an ease-in curve it moves up until it is above the top of the
+  screen. The menu bar and its items draw over it. The arrow does not fade.
+- With Reduce Motion on: no fade, no bounce and no flight. The arrow shows and goes away at once.
 - The animation runs on the main thread, which has no poll work, so it loses no frames.
 
 ## Placement
 
-- Horizontally centred on the item. When the item moves or grows, the arrow follows it with no jump.
-- Vertically: the top of the capsule is 4 pt below the bottom of the menu bar of the screen of the item.
+- Horizontally centred on the item. When the item moves, the arrow moves to the new centre with a short
+  animation (no animation with Reduce Motion). The arrow ignores a resize of the item: the menu bar first
+  resizes an item at its old origin, and then moves it to its final frame some 0.15 s later. When the
+  badge clears, the arrow flies away from where it is and does not follow the item that gets narrower.
+- Vertically: the top of the window is 10 pt above the bottom of the menu bar of the screen of the item, so the
+  tip of the arrow is slightly on the menu bar.
 - Like the alert, the arrow waits until the frame of the item stays the same for 0.1 s, at most 0.5 s,
   before it shows.
 
 ## Window
 
-- A borderless, transparent `NSPanel` with `.nonactivatingPanel`, the size of the capsule plus its shadow.
+- A borderless, transparent `NSPanel` with `.nonactivatingPanel`, 42 × 42 pt. The window server draws the
+  system shadow around the symbol.
 - It ignores the mouse (`ignoresMouseEvents` = true): a click on the item reaches the item, and a click on
   the arrow reaches the window below.
-- Level: one step above the alert. Collection behaviour: `.canJoinAllSpaces`, `.fullScreenAuxiliary`,
+- Level: one step above the alert, and `.mainMenu` − 1 during the flight. Collection behaviour: `.canJoinAllSpaces`, `.fullScreenAuxiliary`,
   `.stationary`.
 - One arrow for each app at most.
 

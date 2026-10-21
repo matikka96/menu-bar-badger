@@ -55,7 +55,7 @@ Both rules are heuristics. An app that fakes full screen without the system full
 
 - The alert goes away 3 s after its last show. A new badge while it shows updates the text and starts the
   3 s again.
-- It goes away at once when the badge clears, when the user clicks the item, when the item hides, and when
+- It goes away at once, with its short fade, when the badge clears, when the user clicks the item, when the item hides, and when
   the app becomes active.
 - A click on the alert (the first click counts) closes it and opens the app the way a left click on the item
   does (step 2 in [item-clicks.md](item-clicks.md)).

@@ -40,7 +40,7 @@
     "%@ new": {
       "comment": "The status of an app. The argument is its Dock badge, for example 3."
     },
-    "A red arrow points to the item while the app is in the background.": {},
+    "A red arrow under the menu bar item points to a new badge. It stays until you click the item or open the app.": {},
     "About": {
       "comment": "The button that opens the About panel."
     },
@@ -110,7 +110,6 @@
     "Only the icon, with no alerts or arrows.": {},
     "Open Login Items": {},
     "Open System Settings": {},
-    "Point to new badges": {},
     "Quit": {
       "comment": "The button that quits the app."
     },
@@ -134,6 +133,7 @@
     "Show": {
       "comment": "A choice for “When there's nothing new”: the menu bar item stays as it is."
     },
+    "Show arrow for new badges": {},
     "Show an alert when the menu bar is hidden": {},
     "Show in Finder": {},
     "The config file has an error": {},
