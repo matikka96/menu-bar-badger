@@ -4,7 +4,7 @@ import BadgerCore
 /// The icon images of one item or alert. Each image is made one time, and again only when the app, the icon mode or
 /// the screen scale changes.
 final class ItemIcons {
-    static let itemSize: CGFloat = 18
+    static let itemSize: CGFloat = 22
     private static let defaultSymbol = "app.badge"
     private static let defaultSymbolScale: CGFloat = 15 / 18
 

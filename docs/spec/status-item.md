@@ -6,7 +6,7 @@ in [item-clicks.md](item-clicks.md).
 
 ## Icon
 
-- The icon is 18 × 18 pt and is centred vertically in the menu bar.
+- The icon is 22 × 22 pt and is centred vertically in the menu bar.
 - Source, in this order:
   1. the icon of the installed app (`NSWorkspace.icon(forFile:)`);
   2. else the SF Symbol `app.badge` as a template image.
