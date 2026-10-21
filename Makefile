@@ -5,10 +5,10 @@ WORKTREES := /Users/masa/Documents/repos/worktrees
 BUILD_NUMBER := $(shell git rev-list --count HEAD 2>/dev/null || echo 1)
 
 .DEFAULT_GOAL := help
-.PHONY: help build test install worktree
+.PHONY: help build test ui-test e2e install worktree
 
 help: ## List the targets
-	@awk 'BEGIN {FS = ":.*## "} /^[a-z-]+:.*## / {printf "  %-10s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*## "} /^[a-z0-9-]+:.*## / {printf "  %-10s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 build: ## Build the Debug flavor
 	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -configuration Debug -derivedDataPath $(DERIVED) \
@@ -16,6 +16,13 @@ build: ## Build the Debug flavor
 
 test: ## Run the BadgerCore unit tests
 	swift test --package-path Packages/BadgerCore
+
+ui-test: ## Run the XCUITest flows of the settings window (takes the keyboard focus)
+	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -configuration Debug -derivedDataPath $(DERIVED) \
+		-destination platform=macOS CURRENT_PROJECT_VERSION=$(BUILD_NUMBER) -quiet test
+
+e2e: build ## Build the fixtures and run the e2e smoke scenarios (takes the keyboard focus)
+	python3 -I E2E/run.py run
 
 install: ## Build Release and replace /Applications/MenuBarBadger.app (clean main branch only)
 	@Scripts/install.sh $(PROJECT) $(SCHEME) $(DERIVED) $(BUILD_NUMBER)

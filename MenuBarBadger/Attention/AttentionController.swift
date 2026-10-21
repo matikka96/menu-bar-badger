@@ -44,6 +44,17 @@ final class AttentionController {
         observeMenuBarChanges()
     }
 
+    #if DEBUG
+    var debugAlerts: [DebugState.Panel] { Self.debugPanels(alerts) }
+    var debugArrows: [DebugState.Panel] { Self.debugPanels(arrows) }
+
+    private static func debugPanels(_ panels: [String: some AttentionPanel]) -> [DebugState.Panel] {
+        panels.filter(\.value.isShown).sorted { $0.key < $1.key }.map {
+            DebugState.Panel(bundleID: $0.key, frame: DebugState.Rect($0.value.frame), level: $0.value.level.rawValue)
+        }
+    }
+    #endif
+
     func dismiss(bundleID: String) {
         pendingShows.removeValue(forKey: bundleID)?.cancel()
         hideAlert(of: bundleID)

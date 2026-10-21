@@ -99,6 +99,7 @@ menu-bar-badger/
 ├── MenuBarBadger/               the app target
 │   ├── App/  MenuBar/  Dock/  Attention/  Settings/  Welcome/  Config/
 │   └── Resources/               Assets.xcassets, Localizable.xcstrings, app icon
+├── MenuBarBadgerUITests/        the XCUITest flows (see testing.md)
 ├── Packages/BadgerCore/         Sources/BadgerCore, Tests/BadgerCoreTests
 ├── E2E/                         fixture apps and the e2e runner (see testing.md)
 ├── Config/                      Base.xcconfig, Debug.xcconfig, Release.xcconfig,

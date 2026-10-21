@@ -18,7 +18,9 @@ Few tests, where they matter. No TDD rule.
 
 ## E2E smoke scenarios
 
-`make e2e` runs them on a real Mac. They are not in CI.
+`make e2e` runs them on a real Mac. They are not in CI. The runner is `E2E/run.py` (Python 3, standard
+library only). It sends the clicks and the keys, and reads the Dock and the windows, through a small Swift
+tool in `E2E/Driver`. A file lock in the git folder lets only one run go at a time, also across worktrees.
 
 ### Fixtures
 
@@ -30,14 +32,17 @@ Few tests, where they matter. No TDD rule.
   - **Text**: an app with one text field that reports the typed text, for the focus scenarios.
 - The runner starts the Debug flavor with `-MBBConfigFile` (a temporary file), `-MBBStateFile` and
   `-MBBSkipWelcome YES`. It never touches the user's config file or the installed Release copy.
-- The test host needs the Accessibility permission.
+- The test host (the terminal) and MenuBarBadger Dev need the Accessibility permission.
+- After the run, the runner checks that the user's config file and the installed Release copy did not
+  change.
 
 ### Debug state file
 
 With `-MBBStateFile <path>`, the Debug flavor writes a JSON file to that path each 0.25 s, with an atomic
 write. It contains: the process ID; the Accessibility state; for each item, the bundle ID, the badge, the
 "Dock item found" state, the visible state, the frame of the item on screen, the title, the red badge label,
-the icon mode and the redraw count; the frames and the window levels of the visible alerts and arrows.
+the icon mode and the redraw count; the frames and the window levels of the visible alerts and arrows. The
+frames use the AppKit screen coordinates.
 
 ### Scenarios
 
@@ -55,10 +60,12 @@ the icon mode and the redraw count; the frames and the window levels of the visi
 
 ## UI tests
 
-XCUITest flows for the settings window, in `make ui-test`. They use a fake Dock source (a Debug launch
-argument) so that they need no Accessibility permission:
+XCUITest flows for the settings window, in the target `MenuBarBadgerUITests` and `make ui-test`. They use a
+fake Dock source (a Debug launch argument) so that they need no Accessibility permission. They take the
+keyboard focus, so run them only when the Mac is free. They are not in CI.
 
-- add an app through the add sheet with the keyboard only;
+- add an app through the add sheet with the keyboard only: "+" opens the sheet, then the search text, the
+  Down Arrow key and Return add the app;
 - remove with "−", with the Delete key and with the context menu;
 - the selection stays after a setting change;
 - the config error banner shows for a bad file and goes away after a fix.

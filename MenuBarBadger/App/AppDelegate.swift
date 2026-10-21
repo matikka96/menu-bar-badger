@@ -16,6 +16,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var attention: AttentionController?
     private var runningApps: RunningApps?
     private var welcomeWindow: WelcomeWindowController?
+    #if DEBUG
+    private var stateWriter: DebugStateWriter?
+    #endif
     private var tasks: [Task<Void, Never>] = []
     private var screenObservers: [NSObjectProtocol] = []
     private var hasBeenActive = false
@@ -45,6 +48,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         runningApps.start()
         self.runningApps = runningApps
         observeScreenSleep(reader)
+        #if DEBUG
+        startStateWriter(menuBar: menuBar, attention: attention)
+        #endif
 
         if isFirstLaunch && !LaunchOptions.skipsWelcome {
             let welcome = WelcomeWindowController(model: model, openSettings: openSettings)
@@ -104,6 +110,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         #endif
         return DockReader(source: AXDockSource())
     }
+
+    #if DEBUG
+    private func startStateWriter(menuBar: MenuBarController, attention: AttentionController) {
+        guard let fileURL = LaunchOptions.stateFile else { return }
+        let model = model
+        let writer = DebugStateWriter(fileURL: fileURL) {
+            DebugState(
+                processID: ProcessInfo.processInfo.processIdentifier,
+                isTrusted: model.isTrusted,
+                items: menuBar.debugItems,
+                alerts: attention.debugAlerts,
+                arrows: attention.debugArrows
+            )
+        }
+        writer.start()
+        stateWriter = writer
+    }
+    #endif
 
     private func startReader(_ reader: any DockReading, isFirstLaunch: Bool) {
         let model = model

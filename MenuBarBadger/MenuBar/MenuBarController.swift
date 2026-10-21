@@ -25,6 +25,12 @@ final class MenuBarController {
         items[bundleID]?.itemWindow
     }
 
+    #if DEBUG
+    var debugItems: [DebugState.Item] {
+        model.apps.compactMap { items[$0.bundleID]?.debugItem }
+    }
+    #endif
+
     func start() {
         sync()
         let model = model

@@ -11,8 +11,16 @@ enum LaunchOptions {
     }
 
     static var fakeDockFile: URL? {
+        fileURL(forKey: "MBBFakeDock")
+    }
+
+    static var stateFile: URL? {
+        fileURL(forKey: "MBBStateFile")
+    }
+
+    private static func fileURL(forKey key: String) -> URL? {
         #if DEBUG
-        UserDefaults.standard.string(forKey: "MBBFakeDock").map {
+        UserDefaults.standard.string(forKey: key).map {
             URL(fileURLWithPath: ($0 as NSString).expandingTildeInPath)
         }
         #else

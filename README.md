@@ -22,6 +22,19 @@ MenuBarBadger gives each of these apps an item in the menu bar with its icon and
 
 `make help` lists all the targets.
 
+## How to run the tests
+
+| Command | Tests | Needs |
+|---|---|---|
+| `make test` | The unit tests of `Packages/BadgerCore` | Nothing |
+| `make ui-test` | The XCUITest flows of the settings window | The Mac is free: the tests take the keyboard focus |
+| `make e2e` | The e2e smoke scenarios with the real Dock | The Mac is free, and the Accessibility permission for your terminal and for MenuBarBadger Dev |
+
+`make e2e` builds the Debug flavor and small fixture apps, then starts MenuBarBadger Dev with a temporary
+config file. It never changes `~/.MenuBarBadger/config.json` or `/Applications/MenuBarBadger.app`. To run
+some of the scenarios, list them with `python3 -I E2E/run.py list`, then run
+`python3 -I E2E/run.py run <name> ...`. The logs of the app are in `build/e2e/run/logs`.
+
 ## Settings
 
 MenuBarBadger keeps its settings in `~/.MenuBarBadger/config.json`. You can change them in the settings

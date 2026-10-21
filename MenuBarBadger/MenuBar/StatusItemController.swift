@@ -24,6 +24,9 @@ final class StatusItemController: NSObject {
     private var config: Config
     private var pendingSettingsRequest: SettingsRequest?
     private var appearance: Appearance?
+    #if DEBUG
+    private var redrawCount = 0
+    #endif
     private var backingObserver: NSObjectProtocol?
     private var defaultsObserver: NSObjectProtocol?
 
@@ -59,6 +62,22 @@ final class StatusItemController: NSObject {
         }
         redraw()
     }
+
+    #if DEBUG
+    var debugItem: DebugState.Item {
+        DebugState.Item(
+            bundleID: state.bundleID,
+            badge: state.badge,
+            isDockItemFound: state.isDockItemFound,
+            isVisible: statusItem.isVisible,
+            frame: itemWindow.map { DebugState.Rect($0.frame) },
+            title: statusItem.button?.title ?? "",
+            redBadgeLabel: appearance?.redBadgeLabel,
+            iconMode: settings.icon.rawValue,
+            redrawCount: redrawCount
+        )
+    }
+    #endif
 
     func remove() {
         for observer in [backingObserver, defaultsObserver].compactMap(\.self) {
@@ -104,6 +123,9 @@ final class StatusItemController: NSObject {
         let next = makeAppearance()
         guard next != appearance else { return }
         appearance = next
+        #if DEBUG
+        redrawCount += 1
+        #endif
         guard let button = statusItem.button else { return }
 
         button.image = icons.image(next.variant, for: next.icon)
