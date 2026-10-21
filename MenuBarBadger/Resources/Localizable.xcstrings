@@ -14,7 +14,28 @@
     "Window": {},
     "Minimize": {},
     "Zoom": {},
-    "Close": {}
+    "Close": {},
+    "%@, %@ new": {
+      "comment": "VoiceOver label of a menu bar item: the app name and its Dock badge."
+    },
+    "%@, nothing new": {
+      "comment": "VoiceOver label of a menu bar item with no Dock badge. The argument is the app name."
+    },
+    "%@ is not installed. Click for options.": {
+      "comment": "Tooltip of a menu bar item. The argument is a bundle ID."
+    },
+    "Open %@": {
+      "comment": "Menu item. The argument is an app name."
+    },
+    "%@ Options…": {
+      "comment": "Menu item that opens the settings of one app. The argument is an app name."
+    },
+    "Settings…": {},
+    "Welcome to %@": {},
+    "%@ shows the Dock badges of your apps in the menu bar. To read the badges, it needs the Accessibility permission.": {},
+    "Open Accessibility Settings": {},
+    "%@ can read Dock badges now.": {},
+    "Add Apps…": {}
   },
   "version": "1.0"
 }

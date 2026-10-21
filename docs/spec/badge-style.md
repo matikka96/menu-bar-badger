@@ -12,7 +12,7 @@ not a number ("new", "•").
 - No text next to the icon. A red capsule with white text shows on the top-right corner of the icon.
 - With a badge, the icon shrinks a little so that the capsule fits in the square of the icon. With no
   badge, the plain icon shows at full size.
-- The capsule: the system red colour; the text in a small bold system font; a height of the text plus
+- The capsule: the system red colour; the text in a 6.5 pt bold system font, so that "new" fits; a height of the text plus
   4 pt; a width of the text plus 3 pt, but never narrower than its height, so a single digit gives a circle.
 - **Label rules**, in this order:
   1. A **count above 99** shows "99+". A count is a text that starts with a digit, contains only digits and
