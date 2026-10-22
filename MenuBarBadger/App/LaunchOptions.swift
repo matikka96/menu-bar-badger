@@ -2,9 +2,9 @@ import Foundation
 
 /// The Debug launch arguments. A Release build ignores them.
 enum LaunchOptions {
-    static var skipsWelcome: Bool {
+    static var skipsSetup: Bool {
         #if DEBUG
-        UserDefaults.standard.bool(forKey: "MBBSkipWelcome")
+        UserDefaults.standard.bool(forKey: "MBBSkipSetup")
         #else
         false
         #endif

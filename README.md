@@ -12,6 +12,7 @@ MenuBarBadger gives each of these apps an item in the menu bar with its icon and
 
 - macOS 26 (Tahoe) or later
 - The Accessibility permission. MenuBarBadger reads the badges from the Dock through the Accessibility API.
+  At the first launch, the setup screen in the settings window asks for it.
 
 ## Build from source
 

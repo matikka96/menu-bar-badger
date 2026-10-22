@@ -30,6 +30,7 @@ A sheet on the settings window that adds one app to the list.
   change of the search text clears the selection.
 - With search text and no match: "No app matches “‹text›”."
 - An app that is already in the list shows dimmed with the label "Added". The user cannot select it.
+- An added app gets the icon mode `newAppIcon` (see [config-file.md](config-file.md)) and no arrow.
 - "Add" adds the selected app, selects its row in the Apps tab and closes the sheet. It is disabled with no
   selection.
 - A double-click on a row adds that app and closes the sheet.

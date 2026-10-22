@@ -35,7 +35,7 @@ names the GitHub issue that builds the feature.
 | [visibility.md](visibility.md) | Show, Dim, Hide, and hide while not running | Badges |
 | [item-position.md](item-position.md) | Keep the menu bar position of an item | Badges |
 | [item-clicks.md](item-clicks.md) | Left click and the right-click menu | Badges |
-| [accessibility.md](accessibility.md) | The permission, the welcome window and the banner | Badges |
+| [accessibility.md](accessibility.md) | The permission, the setup screen and the banner | Badges, Setup |
 | [settings-window.md](settings-window.md) | The settings window: opening rules, tabs, main menu | Settings |
 | [apps-tab.md](apps-tab.md) | The Apps tab: list and detail | Settings |
 | [add-app-sheet.md](add-app-sheet.md) | The sheet that adds an app | Settings |

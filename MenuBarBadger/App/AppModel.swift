@@ -6,6 +6,8 @@ import ServiceManagement
 @Observable
 final class AppModel {
     private static let log = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MenuBarBadger", category: "config")
+    private static let setupPendingKey = "MBB.setupPending"
+    private static let unregisterErrorDuration: Duration = .seconds(5)
 
     private(set) var config = Config()
     private(set) var configError: ConfigError?
@@ -13,6 +15,12 @@ final class AppModel {
     /// Nil until the Dock reader checks the permission for the first time.
     private(set) var isTrusted: Bool?
     private(set) var loginItemStatus = LoginItem.status
+    /// The system refused `register()`, so the switch stays off and disabled until the next launch.
+    private(set) var loginItemRegisterError: String?
+    /// Shows for `unregisterErrorDuration`, then goes away.
+    private(set) var loginItemUnregisterError: String?
+    @ObservationIgnored private var unregisterErrorTask: Task<Void, Never>?
+    private(set) var isSetupPending = !LaunchOptions.skipsSetup && UserDefaults.standard.bool(forKey: setupPendingKey)
 
     var selectedBundleID: String?
     var isAddSheetPresented = false
@@ -45,6 +53,17 @@ final class AppModel {
         self.isTrusted = isTrusted
     }
 
+    func beginSetup() {
+        guard !LaunchOptions.skipsSetup else { return }
+        UserDefaults.standard.set(true, forKey: Self.setupPendingKey)
+        isSetupPending = true
+    }
+
+    func finishSetup() {
+        UserDefaults.standard.removeObject(forKey: Self.setupPendingKey)
+        isSetupPending = false
+    }
+
     func refreshInstalledApps() {
         for index in apps.indices {
             apps[index].refreshInstalledApp()
@@ -59,6 +78,33 @@ final class AppModel {
 
     func refreshLoginItemStatus() {
         loginItemStatus = LoginItem.status
+    }
+
+    func setLoginItemEnabled(_ isEnabled: Bool) {
+        do {
+            try LoginItem.setEnabled(isEnabled)
+            refreshLoginItemStatus()
+        } catch {
+            refreshLoginItemStatus()
+            if isEnabled {
+                // The status shows the real state when the system registered the app in spite of the error.
+                if loginItemStatus != .enabled && loginItemStatus != .requiresApproval {
+                    loginItemRegisterError = error.localizedDescription
+                }
+            } else {
+                showUnregisterError(error.localizedDescription)
+            }
+        }
+    }
+
+    private func showUnregisterError(_ message: String) {
+        loginItemUnregisterError = message
+        unregisterErrorTask?.cancel()
+        unregisterErrorTask = Task {
+            try? await Task.sleep(for: Self.unregisterErrorDuration)
+            guard !Task.isCancelled else { return }
+            loginItemUnregisterError = nil
+        }
     }
 
     func settings(of bundleID: String) -> MonitoredApp? {
@@ -89,7 +135,7 @@ final class AppModel {
     func addApp(bundleID: String, name: String) {
         changeConfig { config in
             guard !config.apps.contains(where: { $0.bundleID == bundleID }) else { return }
-            config.apps.append(MonitoredApp(bundleID: bundleID, name: name))
+            config.apps.append(MonitoredApp(bundleID: bundleID, name: name, icon: config.newAppIcon))
         }
         if settings(of: bundleID) != nil {
             selectedBundleID = bundleID

@@ -24,7 +24,7 @@
 |---|---|
 | `-MBBConfigFile <path>` (a leading `~` is expanded) | Use this config file instead of `dev.config.json`. |
 | `-MBBStateFile <path>` | Write the debug state file to this path. See [testing.md](testing.md). |
-| `-MBBSkipWelcome YES` | Do not show the welcome window. |
+| `-MBBSkipSetup YES` | Do not show the setup screen, also when the setup is pending. A first launch does not set `MBB.setupPending`. |
 | `-MBBFakeDock <path>` | Read the badges from this JSON file (bundle ID to badge text) instead of the Dock. The UI tests use it, so they need no Accessibility permission. |
 
 ## `make` targets

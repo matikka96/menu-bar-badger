@@ -24,7 +24,8 @@ edit the file by hand. The app applies a hand edit at once.
     { "bundleID": "com.apple.mail", "name": "Mail", "icon": "color", "arrow": false },
     { "bundleID": "com.tinyspeck.slackmacgap", "name": "Slack", "icon": "monochrome", "arrow": true }
   ],
-  "badgeStyle": "number",
+  "newAppIcon": "color",
+  "badgeStyle": "redBadge",
   "whenNothingNew": "show",
   "hideWhenNotRunning": false,
   "alertWhenMenuBarHidden": true,
@@ -40,7 +41,8 @@ edit the file by hand. The app applies a hand edit at once.
 | `apps[].name` | string | none | The app writes the display name here so that a person can read the file. The app ignores this field when it reads the file. |
 | `apps[].icon` | `"color"` or `"monochrome"` | `"color"` | The icon mode. See [status-item.md](status-item.md). |
 | `apps[].arrow` | boolean | `false` | Show the arrow for this app. See [arrow.md](arrow.md). |
-| `badgeStyle` | `"number"`, `"redBadge"` or `"iconOnly"` | `"number"` | See [badge-style.md](badge-style.md). |
+| `newAppIcon` | `"color"` or `"monochrome"` | `"color"` | The icon mode that the app writes into `apps[].icon` when the user adds an app. The setup screen sets it. |
+| `badgeStyle` | `"redBadge"`, `"number"` or `"iconOnly"` | `"redBadge"` | See [badge-style.md](badge-style.md). |
 | `whenNothingNew` | `"show"`, `"dim"` or `"hide"` | `"show"` | See [visibility.md](visibility.md). |
 | `hideWhenNotRunning` | boolean | `false` | See [visibility.md](visibility.md). |
 | `alertWhenMenuBarHidden` | boolean | `true` | See [alert.md](alert.md). |

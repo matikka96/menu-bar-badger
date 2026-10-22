@@ -19,6 +19,7 @@ public enum ConfigCodec {
         let fields = [
             "  \"version\": \(Config.currentVersion)",
             "  \"apps\": \(encodeApps(config.apps))",
+            "  \"newAppIcon\": \(quote(config.newAppIcon.rawValue))",
             "  \"badgeStyle\": \(quote(config.badgeStyle.rawValue))",
             "  \"whenNothingNew\": \(quote(config.whenNothingNew.rawValue))",
             "  \"hideWhenNotRunning\": \(config.hideWhenNotRunning)",
@@ -85,6 +86,7 @@ public enum ConfigCodec {
 private struct ConfigFile: Decodable {
     var version: Int
     var apps: [AppEntry]?
+    var newAppIcon: IconMode?
     var badgeStyle: BadgeStyle?
     var whenNothingNew: NothingNewMode?
     var hideWhenNotRunning: Bool?
@@ -121,7 +123,8 @@ private struct ConfigFile: Decodable {
         }
         return Config(
             apps: apps,
-            badgeStyle: badgeStyle ?? .number,
+            newAppIcon: newAppIcon ?? .color,
+            badgeStyle: badgeStyle ?? .redBadge,
             whenNothingNew: whenNothingNew ?? .show,
             hideWhenNotRunning: hideWhenNotRunning ?? false,
             alertWhenMenuBarHidden: alertWhenMenuBarHidden ?? true,

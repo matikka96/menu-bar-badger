@@ -4,19 +4,15 @@ import BadgerCore
 final class StatusItemController: NSObject {
     private struct Appearance: Equatable {
         var isVisible: Bool
-        var icon: ItemIcons.Source
-        var variant: ItemIcons.Variant
+        var face: ItemFace.Look
         var isDimmed: Bool
-        var title: String
-        var redBadgeLabel: String?
         var toolTip: String?
         var accessibilityLabel: String
     }
 
     private let statusItem: NSStatusItem
     private let position: ItemPosition
-    private let icons = ItemIcons()
-    private let redBadge = RedBadgeView()
+    private let face = ItemFace()
     private let openSettings: (SettingsRequest) -> Void
     private let onClick: (String) -> Void
     private var state: AppState
@@ -72,7 +68,7 @@ final class StatusItemController: NSObject {
             isVisible: statusItem.isVisible,
             frame: itemWindow.map { DebugState.Rect($0.frame) },
             title: statusItem.button?.title ?? "",
-            redBadgeLabel: appearance?.redBadgeLabel,
+            redBadgeLabel: appearance?.face.redBadgeLabel,
             iconMode: settings.icon.rawValue,
             redrawCount: redrawCount
         )
@@ -92,13 +88,7 @@ final class StatusItemController: NSObject {
         button.target = self
         button.action = #selector(buttonClicked)
         button.sendAction(on: [.leftMouseUp, .rightMouseUp])
-        button.font = .monospacedDigitSystemFont(ofSize: NSFont.menuBarFont(ofSize: 0).pointSize, weight: .regular)
-        button.addSubview(redBadge)
-        let corner = ItemIcons.itemSize / 2
-        NSLayoutConstraint.activate([
-            redBadge.trailingAnchor.constraint(equalTo: button.centerXAnchor, constant: corner + RedBadgeView.trailingOverhang),
-            redBadge.topAnchor.constraint(equalTo: button.centerYAnchor, constant: -corner - RedBadgeView.topOverhang),
-        ])
+        face.install(in: button)
         backingObserver = NotificationCenter.default.addObserver(
             forName: NSWindow.didChangeBackingPropertiesNotification, object: nil, queue: .main
         ) { [weak self] note in
@@ -128,12 +118,8 @@ final class StatusItemController: NSObject {
         #endif
         guard let button = statusItem.button else { return }
 
-        button.image = icons.image(next.variant, for: next.icon)
+        face.draw(next.face, in: button)
         button.appearsDisabled = next.isDimmed
-        button.title = next.title
-        button.imagePosition = next.title.isEmpty ? .imageOnly : .imageLeading
-        redBadge.text = next.redBadgeLabel ?? ""
-        redBadge.isHidden = next.redBadgeLabel == nil
         button.toolTip = next.toolTip
         button.setAccessibilityLabel(next.accessibilityLabel)
         setVisible(next.isVisible)
@@ -150,17 +136,16 @@ final class StatusItemController: NSObject {
         let isNothingNew = badge.isEmpty
         let isHidden = ItemVisibility.isHidden(badge: badge, isRunning: state.isRunning, config: config)
         let isDimmed = config.whenNothingNew == .dim && isNothingNew
-        let redBadgeLabel = config.badgeStyle == .redBadge && !isNothingNew
-            ? RedBadgeLabel.label(for: badge, fits: RedBadgeView.fits)
-            : nil
         let scale = statusItem.button?.window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 2
         return Appearance(
             isVisible: !isHidden,
-            icon: ItemIcons.Source(appURL: state.appURL, mode: settings.icon, scale: scale),
-            variant: isDimmed ? .dimmed : .plain,
+            face: ItemFace.Look(
+                badge: badge,
+                style: config.badgeStyle,
+                icon: ItemIcons.Source(appURL: state.appURL, mode: settings.icon, scale: scale),
+                variant: isDimmed ? .dimmed : .plain
+            ),
             isDimmed: isDimmed,
-            title: config.badgeStyle == .number ? badge : "",
-            redBadgeLabel: redBadgeLabel,
             toolTip: state.isInstalled ? nil : String(localized: "\(state.bundleID) is not installed. Click for options."),
             accessibilityLabel: isNothingNew
                 ? String(localized: "\(state.name), nothing new")

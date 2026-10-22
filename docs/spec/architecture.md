@@ -15,7 +15,7 @@
 ## Main decisions
 
 - **AppKit lifecycle, SwiftUI views.** An `NSApplicationDelegate` is the entry point. The settings window,
-  the welcome window, the alert content and the arrow content are SwiftUI views in `NSHostingController` or
+  the setup screen, the alert content and the arrow content are SwiftUI views in `NSHostingController` or
   `NSHostingView`. Reason: an agent app cannot open the SwiftUI `Settings` scene in a reliable way, and the
   known workarounds use hidden windows.
 - **One `NSStatusItem` for each monitored app.** `MenuBarExtra` cannot make a dynamic number of items, and
@@ -27,7 +27,8 @@
 - **One observable model.** All UI reads one `@Observable` model on the main actor. Nothing else holds UI
   state.
 - **Config file, not `UserDefaults`, for user settings.** See [config-file.md](config-file.md).
-  `UserDefaults` keeps only machine UI state: window frames, the last tab, the position backups.
+  `UserDefaults` keeps only machine UI state: window frames, the last tab, the position backups and the
+  pending setup (`MBB.setupPending`).
 
 ## Components
 
@@ -44,7 +45,7 @@
 │ RunningApps   │ ─────────────────────▶ ▼
 │ (NSWorkspace) │        ┌────────────────────────┬─────────────────┬─────────────────┐
 └───────────────┘        │ MenuBarController      │ AttentionCtrl   │ SettingsWindow  │
-                         │  └ StatusItemController│  alert, arrow   │ Welcome window  │
+                         │  └ StatusItemController│  alert, arrow   │ setup screen    │
                          │    (one for each app)  │                 │                 │
                          └────────────────────────┴─────────────────┴─────────────────┘
 ```
@@ -52,16 +53,16 @@
 | Component | Job |
 |---|---|
 | `AppDelegate` | Builds the components at launch and owns them. Handles reopen and termination. |
-| `AppModel` | The single source of UI state: the config, one state for each monitored app (name, icon, running, active, badge, Dock item found), the permission state and the config error. It applies changes to the config through `ConfigStore`. |
+| `AppModel` | The single source of UI state: the config, one state for each monitored app (name, icon, running, active, badge, Dock item found), the permission state, the config error and the pending setup. It applies changes to the config through `ConfigStore`. |
 | `ConfigStore` | Reads, validates, writes and watches the config file. It lives in `BadgerCore` (Foundation only). See [config-file.md](config-file.md). |
 | `DockReader` | An actor. It finds the Dock items, polls the badges and recovers from stale items and Dock restarts. It sends only changes to the model. See [dock-reader.md](dock-reader.md). |
 | `RunningApps` | Watches app launch, termination and activation through `NSWorkspace` and updates the model. |
 | `MenuBarController` | Keeps exactly one `StatusItemController` for each monitored app, in config order. |
 | `StatusItemController` | Owns one `NSStatusItem`. It draws the item from the model and handles its clicks. |
+| `ItemFace` | Draws the icon, the Number text and the red capsule on an item button. The status item and the menu bar preview of the setup screen use it. |
 | `AttentionController` | Shows and hides the alert and the arrow from the model changes. See [alert.md](alert.md) and [arrow.md](arrow.md). |
-| `SettingsWindowController` | Owns the settings window. See [settings-window.md](settings-window.md). |
-| `WelcomeWindowController` | Owns the welcome window. See [accessibility.md](accessibility.md). |
-| `LoginItem`, `Shortcut` | Thin adapters over `SMAppService` and KeyboardShortcuts. |
+| `SettingsWindowController` | Owns the settings window, also while it shows the setup screen. See [settings-window.md](settings-window.md). |
+| `LoginItem`, `Shortcut`, `AccessibilityPermission` | Thin adapters over `SMAppService`, KeyboardShortcuts and the Accessibility prompt. |
 
 The names are a guide, not a rule. Keep the split: pure rules in `BadgerCore`, system calls at the edge,
 and one model in the middle.
@@ -97,7 +98,7 @@ need unit tests:
 menu-bar-badger/
 ├── MenuBarBadger.xcodeproj      buildable folders: a new file needs no project edit
 ├── MenuBarBadger/               the app target
-│   ├── App/  MenuBar/  Dock/  Attention/  Settings/  Welcome/  Config/
+│   ├── App/  MenuBar/  Dock/  Attention/  Settings/  Config/
 │   └── Resources/               Assets.xcassets, Localizable.xcstrings, app icon
 ├── MenuBarBadgerUITests/        the XCUITest flows (see testing.md)
 ├── Packages/BadgerCore/         Sources/BadgerCore, Tests/BadgerCoreTests

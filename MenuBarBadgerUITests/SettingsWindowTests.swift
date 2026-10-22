@@ -77,6 +77,33 @@ final class SettingsWindowTests: XCTestCase {
         XCTAssertTrue(element("removeApp").isEnabled)
     }
 
+    /// The fake Dock source grants the permission, so Done is enabled at once.
+    @MainActor
+    func testSetupScreenAtTheFirstLaunchThenTheAddSheetWithTheChosenIcon() throws {
+        start(skipsSetup: false)
+        XCTAssertTrue(element("setupScreen").waitForExistence(timeout: Self.timeout), "The setup screen did not open")
+        XCTAssertFalse(element("settingsTabs").exists)
+        XCTAssertFalse(element("appsList").exists)
+
+        element("setupIconMode").radioButtons["Monochrome"].click()
+        let done = element("setupDone")
+        XCTAssertTrue(done.waitForEnabled(timeout: Self.timeout))
+        done.click()
+        let results = element("appResults")
+        XCTAssertTrue(results.waitForExistence(timeout: Self.timeout), "The add sheet did not open")
+        XCTAssertTrue(element("settingsTabs").exists)
+        XCTAssertTrue(results.staticTexts["TextEdit"].waitForExistence(timeout: Self.timeout))
+        app.typeText("TextEdit")
+        app.typeKey(.downArrow, modifierFlags: [])
+        app.typeKey(.return, modifierFlags: [])
+        XCTAssertNotNil(waitForConfigApps { $0.first?["icon"] as? String == "monochrome" })
+
+        app.terminate()
+        start(skipsSetup: false)
+        XCTAssertTrue(element("appsList").waitForExistence(timeout: Self.timeout))
+        XCTAssertFalse(element("setupScreen").exists)
+    }
+
     @MainActor
     func testConfigErrorBannerShowsForABadFileAndGoesAwayAfterAFix() throws {
         try launch(apps: ["com.apple.TextEdit"])
@@ -97,11 +124,18 @@ final class SettingsWindowTests: XCTestCase {
     @MainActor
     private func launch(apps: [String]) throws {
         try writeConfig(apps: apps)
+        start(skipsSetup: true)
+        XCTAssertTrue(element("appsList").waitForExistence(timeout: Self.timeout), "The settings window did not open")
+    }
+
+    /// With no config file and `skipsSetup` false, the launch is a first launch.
+    @MainActor
+    private func start(skipsSetup: Bool) {
         app = XCUIApplication()
         app.launchArguments = [
             "-MBBFakeDock", folder.appending(path: "dock.json").path,
             "-MBBConfigFile", configFile.path,
-            "-MBBSkipWelcome", "YES",
+            "-MBBSkipSetup", skipsSetup ? "YES" : "NO",
             "-SettingsLastTab", "0",
             "-ApplePersistenceIgnoreState", "YES",
         ]
@@ -109,7 +143,6 @@ final class SettingsWindowTests: XCTestCase {
         addTeardownBlock { @MainActor [app] in app?.terminate() }
         // The launch does not activate an agent app. The first activation opens the settings window.
         app.activate()
-        XCTAssertTrue(element("appsList").waitForExistence(timeout: Self.timeout), "The settings window did not open")
     }
 
     @MainActor
@@ -147,5 +180,13 @@ final class SettingsWindowTests: XCTestCase {
     private func waitForConfig(_ condition: ([String]) -> Bool) {
         let apps = waitForConfigApps { condition($0.compactMap { $0["bundleID"] as? String }) }
         XCTAssertNotNil(apps, "The config file has the apps \(configApps()?.compactMap { $0["bundleID"] } ?? [])")
+    }
+}
+
+private extension XCUIElement {
+    func waitForEnabled(timeout: TimeInterval) -> Bool {
+        let predicate = NSPredicate(format: "isEnabled == true")
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: self)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
     }
 }

@@ -29,10 +29,8 @@
     },
     "Settings…": {},
     "Welcome to %@": {},
-    "%@ shows the Dock badges of your apps in the menu bar. To read the badges, it needs the Accessibility permission.": {},
     "Open Accessibility Settings": {},
     "%@ can read Dock badges now.": {},
-    "Add Apps…": {},
     "%@ %@": {
       "comment": "The app name and its version, for example MenuBarBadger 1.0."
     },
@@ -148,7 +146,50 @@
     "Turn on %@ in Privacy & Security › Accessibility.": {},
     "Use another key.": {},
     "Use ⌘ or ⌃ in the shortcut.": {},
-    "When there's nothing new": {}
+    "When there's nothing new": {},
+    "Only Accessibility is required. You can change the preferences later.": {},
+    "Required": {
+      "comment": "A section title on the setup screen."
+    },
+    "Preferences": {
+      "comment": "A section title on the setup screen."
+    },
+    "Allow Accessibility": {},
+    "%@ needs it to read the Dock badges.": {
+      "comment": "The hint of the Accessibility step. The argument is the app name."
+    },
+    "Turn on %@ in System Settings. This window updates by itself.": {},
+    "Allowed": {
+      "comment": "The Accessibility permission is granted."
+    },
+    "Badge style": {},
+    "Preview with Mail as an example.": {},
+    "You can change all of this later in Settings.": {},
+    "Allow Accessibility to finish the setup.": {},
+    "Done": {
+      "comment": "The button that ends the setup screen."
+    },
+    "Setup": {
+      "comment": "The title of the setup screen in the settings window."
+    },
+    "Finder": {
+      "comment": "An app menu in the menu bar preview."
+    },
+    "File": {
+      "comment": "A menu title in the menu bar preview."
+    },
+    "View": {
+      "comment": "A menu title in the menu bar preview."
+    },
+    "Menu bar preview, %@ style: %@, %@ new": {
+      "comment": "VoiceOver label of the menu bar preview: the badge style, the example app and its badge."
+    },
+    "%@ You can change it for each app later.": {
+      "comment": "The hint of the icon mode for new apps. The first part is the hint of the icon mode."
+    },
+    "The badges stay in the menu bar after a restart.": {
+      "comment": "The hint of the Launch at login setting."
+    }
   },
   "version": "1.0"
 }

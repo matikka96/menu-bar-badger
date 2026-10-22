@@ -6,8 +6,8 @@ public enum IconMode: String, Sendable, Equatable, CaseIterable {
 }
 
 public enum BadgeStyle: String, Sendable, Equatable, CaseIterable {
-    case number
     case redBadge
+    case number
     case iconOnly
 }
 
@@ -35,6 +35,7 @@ public struct Config: Sendable, Equatable {
     public static let currentVersion = 1
 
     public var apps: [MonitoredApp]
+    public var newAppIcon: IconMode
     public var badgeStyle: BadgeStyle
     public var whenNothingNew: NothingNewMode
     public var hideWhenNotRunning: Bool
@@ -43,13 +44,15 @@ public struct Config: Sendable, Equatable {
 
     public init(
         apps: [MonitoredApp] = [],
-        badgeStyle: BadgeStyle = .number,
+        newAppIcon: IconMode = .color,
+        badgeStyle: BadgeStyle = .redBadge,
         whenNothingNew: NothingNewMode = .show,
         hideWhenNotRunning: Bool = false,
         alertWhenMenuBarHidden: Bool = true,
         openSettingsShortcut: Shortcut? = nil
     ) {
         self.apps = apps
+        self.newAppIcon = newAppIcon
         self.badgeStyle = badgeStyle
         self.whenNothingNew = whenNothingNew
         self.hideWhenNotRunning = hideWhenNotRunning
