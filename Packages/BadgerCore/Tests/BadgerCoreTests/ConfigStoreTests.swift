@@ -66,7 +66,7 @@ struct ConfigStoreTests {
         store.start()
         defer { store.stop() }
 
-        let changed = Config(badgeStyle: .redBadge)
+        let changed = Config(badgeStyle: .number)
         #expect(try store.save(changed))
         #expect(try store.save(changed) == false)
     }

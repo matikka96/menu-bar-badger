@@ -13,6 +13,7 @@ enum Spacing {
 
 enum CornerRadius {
     static let panel: CGFloat = 12
+    static let menuBarPreview: CGFloat = 8
 }
 
 extension View {

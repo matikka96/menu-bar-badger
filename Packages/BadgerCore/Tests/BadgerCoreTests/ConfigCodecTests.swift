@@ -20,7 +20,8 @@ struct ConfigCodecTests {
         let config = try decode(#"{"version": 1}"#)
         #expect(config == Config())
         #expect(config.apps.isEmpty)
-        #expect(config.badgeStyle == .number)
+        #expect(config.newAppIcon == .color)
+        #expect(config.badgeStyle == .redBadge)
         #expect(config.whenNothingNew == .show)
         #expect(config.hideWhenNotRunning == false)
         #expect(config.alertWhenMenuBarHidden == true)
@@ -65,6 +66,7 @@ struct ConfigCodecTests {
         #"{"version": 1, "apps": [{"name": "Mail"}]}"#,
         #"{"version": 1, "apps": [{"bundleID": ""}]}"#,
         #"{"version": 1, "apps": [{"bundleID": "a", "icon": "sepia"}]}"#,
+        #"{"version": 1, "newAppIcon": "sepia"}"#,
         #"{"version": 1, "badgeStyle": "huge"}"#,
         #"{"version": 1, "whenNothingNew": 3}"#,
         #"{"version": 1, "hideWhenNotRunning": 1}"#,
@@ -88,6 +90,7 @@ struct ConfigCodecTests {
                 MonitoredApp(bundleID: "com.apple.mail", name: "Mail"),
                 MonitoredApp(bundleID: "com.tinyspeck.slackmacgap", name: "Slack", icon: .monochrome, arrow: true),
             ],
+            newAppIcon: .monochrome,
             badgeStyle: .redBadge,
             whenNothingNew: .dim,
             hideWhenNotRunning: true,
@@ -99,7 +102,7 @@ struct ConfigCodecTests {
         #expect(ConfigCodec.encode(try ConfigCodec.decode(data)) == data)
 
         let text = String(decoding: data, as: UTF8.self)
-        let order = ["version", "apps", "badgeStyle", "whenNothingNew", "hideWhenNotRunning",
+        let order = ["version", "apps", "newAppIcon", "badgeStyle", "whenNothingNew", "hideWhenNotRunning",
                      "alertWhenMenuBarHidden", "openSettingsShortcut"]
         let positions = order.map { text.range(of: "\"\($0)\"")!.lowerBound }
         #expect(positions == positions.sorted())
@@ -112,7 +115,8 @@ struct ConfigCodecTests {
         {
           "version": 1,
           "apps": [],
-          "badgeStyle": "number",
+          "newAppIcon": "color",
+          "badgeStyle": "redBadge",
           "whenNothingNew": "show",
           "hideWhenNotRunning": false,
           "alertWhenMenuBarHidden": true,

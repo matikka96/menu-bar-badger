@@ -24,11 +24,15 @@ lists with a detail pane.
 - A remove has the effects in [monitored-apps.md](monitored-apps.md). After a remove, no row is selected.
 - The selection stays when a setting changes, when the config file reloads with the same app, and when the
   window becomes active again.
-- Empty list: the list shows "No apps yet" and "Click + to add an app." in its centre.
+- Empty list: the list shows "No apps yet" (body font, medium weight) and "Click + to add an app." (the font
+  of the row hints) in its centre, in the secondary colour.
+- After Done on the [setup screen](accessibility.md#setup-screen), when the list is empty, the add sheet (the
+  same sheet as "+") opens on the window at once. Cancel closes the sheet and shows the empty list.
 
 ## Detail
 
-With no selection, the detail pane shows "Select an app" in its centre.
+With no selection, the detail pane shows "Select an app" in its centre, in the body font, medium weight and
+the secondary colour.
 
 With a selected app:
 
@@ -51,5 +55,6 @@ With a selected app:
 - "Remove" in the context menu removes the row and the item.
 - "−" is disabled with no selection, removes the selected row, and is disabled again after the remove.
 - The Delete key removes the selected row.
+- Done on the setup screen with an empty list shows the Apps tab with the add sheet open.
 - The arrow switch is disabled with Icon only and enabled again with Number.
 - The status text changes from "Nothing new" to "3 new" in less than 1.5 s after the Dock badge changes.

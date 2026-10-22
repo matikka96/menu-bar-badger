@@ -15,7 +15,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var menuBar: MenuBarController?
     private var attention: AttentionController?
     private var runningApps: RunningApps?
-    private var welcomeWindow: WelcomeWindowController?
     #if DEBUG
     private var stateWriter: DebugStateWriter?
     #endif
@@ -27,7 +26,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.mainMenu = MainMenu.make()
         NSApp.windowsMenu = NSApp.mainMenu?.items.last?.submenu
 
-        let isFirstLaunch = !FileManager.default.fileExists(atPath: ConfigLocation.fileURL.path)
+        if !FileManager.default.fileExists(atPath: ConfigLocation.fileURL.path) {
+            model.beginSetup()
+        }
         startConfigStore()
         let settingsWindow = settingsWindow
         globalShortcut.start { settingsWindow.open(.lastTab) }
@@ -42,7 +43,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let reader = makeReader()
         self.reader = reader
-        startReader(reader, isFirstLaunch: isFirstLaunch)
+        startReader(reader)
 
         let runningApps = RunningApps(model: model, reader: reader)
         runningApps.start()
@@ -52,11 +53,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         startStateWriter(menuBar: menuBar, attention: attention)
         #endif
 
-        if isFirstLaunch && !LaunchOptions.skipsWelcome {
-            let welcome = WelcomeWindowController(model: model, openSettings: openSettings)
-            welcome.show()
-            welcomeWindow = welcome
-        } else if model.config.apps.isEmpty {
+        if model.isSetupPending || model.config.apps.isEmpty {
             settingsWindow.open(.apps(selecting: nil))
         }
     }
@@ -70,9 +67,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         model.refreshLoginItemStatus()
         guard !hasBeenActive else { return }
         hasBeenActive = true
-        if welcomeWindow?.isVisible != true {
-            settingsWindow.open(.lastTab)
-        }
+        settingsWindow.open(.lastTab)
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -129,7 +124,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
     #endif
 
-    private func startReader(_ reader: any DockReading, isFirstLaunch: Bool) {
+    private func startReader(_ reader: any DockReading) {
         let model = model
         let settingsWindow = settingsWindow
         tasks.append(Task {
@@ -139,7 +134,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 case .permission(let isTrusted):
                     Self.dockLog.info("Accessibility permission: \(isTrusted)")
                     model.setTrusted(isTrusted)
-                    if !hasCheckedPermission, !isTrusted, !isFirstLaunch {
+                    settingsWindow.permissionCheckDidEnd()
+                    if !hasCheckedPermission, !isTrusted, !model.isSetupPending {
                         settingsWindow.open(.lastTab)
                     }
                     hasCheckedPermission = true

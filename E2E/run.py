@@ -368,7 +368,7 @@ class Badger:
         with open(LOGS / f"{self.name}.log", "a") as log:
             self.process = subprocess.Popen(
                 [str(APP_BINARY), "-MBBConfigFile", str(CONFIG_FILE), "-MBBStateFile", str(STATE_FILE),
-                 "-MBBSkipWelcome", "YES", "-ApplePersistenceIgnoreState", "YES"],
+                 "-MBBSkipSetup", "YES", "-ApplePersistenceIgnoreState", "YES"],
                 stdout=log, stderr=subprocess.STDOUT)
         try:
             with as_environment_problem():

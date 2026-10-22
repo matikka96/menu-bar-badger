@@ -6,7 +6,7 @@ A grouped form with these sections, from top to bottom.
 
 | Row | Control | Hint |
 |---|---|---|
-| Badge | Segmented: Number / Red Badge / Icon Only | "Number next to the icon." / "Red badge on the icon." / "Only the icon, with no alerts or arrows." |
+| Badge | Segmented: Red Badge / Number / Icon Only | "Red badge on the icon." / "Number next to the icon." / "Only the icon, with no alerts or arrows." |
 | When there's nothing new | Segmented: Show / Dim / Hide | "The icon stays as it is." / "The icon is dimmed." / "The icon is hidden until something arrives." |
 | Hide while the app isn't running | Switch | "The icon comes back when the app starts." |
 

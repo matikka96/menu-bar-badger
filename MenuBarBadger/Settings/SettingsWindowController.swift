@@ -1,4 +1,5 @@
 import AppKit
+import BadgerCore
 import OSLog
 import SwiftUI
 
@@ -9,7 +10,7 @@ enum SettingsRequest: Equatable {
 }
 
 final class SettingsWindowController: NSWindowController, NSToolbarDelegate {
-    private enum Tab: Int, CaseIterable {
+    private enum Tab: Int {
         case apps
         case general
     }
@@ -18,10 +19,15 @@ final class SettingsWindowController: NSWindowController, NSToolbarDelegate {
     private static let frameName = "Settings"
     private static let lastTabKey = "SettingsLastTab"
     private static let tabPickerItem = NSToolbarItem.Identifier("tabs")
+    private static let toolbarItems: [NSToolbarItem.Identifier] = [.flexibleSpace, tabPickerItem, .flexibleSpace]
 
     private let model: AppModel
     private let tabs = SettingsTabViewController()
     private let tabPicker = NSSegmentedControl()
+    /// The setup screen is a tab with no segment in the tab picker. The picker shows only after Done.
+    private var setupTab: NSTabViewItem?
+    /// An open before the first permission check waits for it, so that the window never shows a wrong state.
+    private var requestBeforePermission: SettingsRequest?
 
     init(model: AppModel) {
         self.model = model
@@ -38,6 +44,7 @@ final class SettingsWindowController: NSWindowController, NSToolbarDelegate {
         let lastTab = Tab(rawValue: UserDefaults.standard.integer(forKey: Self.lastTabKey)) ?? .apps
         tabs.selectedTabViewItemIndex = lastTab.rawValue
         tabs.onSelect = { [tabPicker] index in
+            guard Tab(rawValue: index) != nil else { return }
             tabPicker.selectedSegment = index
             UserDefaults.standard.set(index, forKey: Self.lastTabKey)
         }
@@ -58,6 +65,15 @@ final class SettingsWindowController: NSWindowController, NSToolbarDelegate {
         toolbar.displayMode = .iconOnly
         toolbar.allowsDisplayModeCustomization = false
         toolbar.centeredItemIdentifiers = [Self.tabPickerItem]
+
+        if model.isSetupPending {
+            let setupTab = Self.tabItem(
+                title: String(localized: "Setup"), root: SetupScreen(model: model) { [weak self] in self?.finishSetup() }
+            )
+            tabs.addTabViewItem(setupTab)
+            tabs.selectedTabViewItemIndex = tabs.tabViewItems.count - 1
+            self.setupTab = setupTab
+        }
 
         window.contentViewController = tabs
         window.title = AppInfo.name
@@ -80,6 +96,10 @@ final class SettingsWindowController: NSWindowController, NSToolbarDelegate {
 
     func open(_ request: SettingsRequest) {
         guard let window else { return }
+        guard model.isTrusted != nil else {
+            requestBeforePermission = request
+            return
+        }
         Self.log.info("Settings window opens: \(String(describing: request))")
         let wasVisible = window.isVisible
         if !wasVisible {
@@ -87,7 +107,7 @@ final class SettingsWindowController: NSWindowController, NSToolbarDelegate {
             model.catalog.refresh()
             model.refreshLoginItemStatus()
         }
-        switch request {
+        switch setupTab == nil ? request : .lastTab {
         case .lastTab:
             break
         case .apps(let bundleID):
@@ -99,7 +119,9 @@ final class SettingsWindowController: NSWindowController, NSToolbarDelegate {
             tabs.selectedTabViewItemIndex = Tab.apps.rawValue
             model.isAddSheetPresented = true
         }
-        NSApp.activate()
+        // macOS does not activate an agent app at launch, and `activate()` waits for the frontmost app to yield,
+        // which it never does. Each open comes from the user, so the window takes the focus.
+        NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
         window.orderFrontRegardless()
         if !wasVisible {
@@ -107,16 +129,33 @@ final class SettingsWindowController: NSWindowController, NSToolbarDelegate {
         }
     }
 
+    func permissionCheckDidEnd() {
+        guard let request = requestBeforePermission else { return }
+        requestBeforePermission = nil
+        open(request)
+    }
+
+    private func finishSetup() {
+        guard let setupTab, let toolbar = window?.toolbar else { return }
+        model.finishSetup()
+        self.setupTab = nil
+        for (index, identifier) in toolbarDefaultItemIdentifiers(toolbar).enumerated() {
+            toolbar.insertItem(withItemIdentifier: identifier, at: index)
+        }
+        open(model.config.apps.isEmpty ? .addApp : .apps(selecting: nil))
+        tabs.removeTabViewItem(setupTab)
+    }
+
     @objc private func selectTab(_ sender: NSSegmentedControl) {
         tabs.selectedTabViewItemIndex = sender.selectedSegment
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [.flexibleSpace, Self.tabPickerItem, .flexibleSpace]
+        setupTab == nil ? Self.toolbarItems : []
     }
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        toolbarDefaultItemIdentifiers(toolbar)
+        Self.toolbarItems
     }
 
     func toolbar(

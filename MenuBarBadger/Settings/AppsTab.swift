@@ -47,11 +47,7 @@ private struct AppList: View {
             .onDeleteCommand(perform: removeSelected)
             .overlay {
                 if model.apps.isEmpty {
-                    ContentUnavailableView {
-                        Text("No apps yet")
-                    } description: {
-                        Text("Click + to add an app.")
-                    }
+                    EmptyPaneText(title: "No apps yet", message: "Click + to add an app.")
                 }
             }
             .accessibilityIdentifier("appsList")
@@ -119,10 +115,27 @@ private struct AppDetail: View {
            let settings = model.settings(of: bundleID) {
             AppOptions(model: model, app: app, settings: settings)
         } else {
-            ContentUnavailableView {
-                Text("Select an app")
+            EmptyPaneText(title: "Select an app")
+        }
+    }
+}
+
+private struct EmptyPaneText: View {
+    let title: LocalizedStringKey
+    var message: LocalizedStringKey?
+
+    var body: some View {
+        VStack(spacing: Spacing.xSmall) {
+            Text(title)
+                .fontWeight(.medium)
+            if let message {
+                Text(message)
+                    .font(.subheadline)
             }
         }
+        .foregroundStyle(.secondary)
+        .multilineTextAlignment(.center)
+        .padding(Spacing.medium)
     }
 }
 
@@ -152,18 +165,9 @@ private struct AppOptions: View {
             .padding(.top, Spacing.xSmall)
             Form {
                 Section {
-                    SettingRow(
-                        "Icon",
-                        hint: Self.iconHints[settings.icon],
-                        hintVariants: Array(Self.iconHints.values)
-                    ) {
-                        Picker("Icon", selection: binding(\.icon)) {
-                            Text("Color").tag(IconMode.color)
-                            Text("Monochrome").tag(IconMode.monochrome)
-                        }
-                        .pickerStyle(.segmented)
-                        .labelsHidden()
-                        .accessibilityIdentifier("appIconMode")
+                    SettingRow("Icon", hint: settings.icon.hint, hintVariants: IconMode.allCases.map(\.hint)) {
+                        IconModePicker(selection: binding(\.icon))
+                            .accessibilityIdentifier("appIconMode")
                     }
                     SettingRow(
                         "Show arrow for new badges",
@@ -193,10 +197,6 @@ private struct AppOptions: View {
         }
     }
 
-    private static let iconHints: [IconMode: Text] = [
-        .color: Text("The icon keeps the app's colours."),
-        .monochrome: Text("The icon shows in black and white."),
-    ]
     private static let arrowHint = Text("A red arrow under the menu bar item points to a new badge. It stays until you click the item or open the app.")
     private static let iconOnlyHint = Text("Doesn't apply to Icon only.")
 

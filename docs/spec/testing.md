@@ -31,7 +31,7 @@ tool in `E2E/Driver`. A file lock in the git folder lets only one run go at a ti
   - **D**: an agent app with no Dock icon.
   - **Text**: an app with one text field that reports the typed text, for the focus scenarios.
 - The runner starts the Debug flavor with `-MBBConfigFile` (a temporary file), `-MBBStateFile` and
-  `-MBBSkipWelcome YES`. It never touches the user's config file or the installed Release copy.
+  `-MBBSkipSetup YES`. It never touches the user's config file or the installed Release copy.
 - The test host (the terminal) and MenuBarBadger Dev need the Accessibility permission.
 - After the run, the runner checks that the user's config file and the installed Release copy did not
   change.
@@ -68,7 +68,10 @@ keyboard focus, so run them only when the Mac is free. They are not in CI.
   Down Arrow key and Return add the app;
 - remove with "−", with the Delete key and with the context menu;
 - the selection stays after a setting change;
-- the config error banner shows for a bad file and goes away after a fix.
+- the config error banner shows for a bad file and goes away after a fix;
+- the setup screen: a first launch shows only the setup screen, Monochrome in the "Icon" row and Done show
+  the tab picker and the add sheet, the added app gets the Monochrome icon, and a relaunch after Done shows
+  no setup screen. The fake Dock source grants the permission.
 
 ## Accessibility identifiers
 
@@ -76,4 +79,4 @@ Every control that a test uses has a fixed identifier: `appsList`, `appRow`, `ad
 `appIconMode`, `appArrow`, `openApp`, `searchApps`, `appResults`, `confirmAdd`, `cancelAdd`,
 `chooseFromFinder`, `badgeStyle`, `whenNothingNew`, `hideWhenNotRunning`, `alertWhenMenuBarHidden`,
 `launchAtLogin`, `openSettingsShortcut`, `showConfigFile`, `about`, `quit`, `accessibilityBanner`,
-`configErrorBanner`, `welcomeOpenSettings`, `welcomeAddApps`, `settingsTabs`.
+`configErrorBanner`, `setupScreen`, `setupOpenSettings`, `setupIconMode`, `setupBadgePreview`, `setupDone`, `settingsTabs`.

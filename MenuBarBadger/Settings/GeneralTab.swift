@@ -59,15 +59,9 @@ private struct MenuBarSection: View {
 
     var body: some View {
         Section("Menu Bar") {
-            SettingRow("Badge", hint: Self.badgeHints[model.config.badgeStyle], hintVariants: Array(Self.badgeHints.values)) {
-                Picker("Badge", selection: model.configBinding(\.badgeStyle)) {
-                    Text("Number").tag(BadgeStyle.number)
-                    Text("Red Badge").tag(BadgeStyle.redBadge)
-                    Text("Icon Only").tag(BadgeStyle.iconOnly)
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .accessibilityIdentifier("badgeStyle")
+            SettingRow("Badge", hint: model.config.badgeStyle.hint, hintVariants: BadgeStyle.allCases.map(\.hint)) {
+                BadgeStylePicker(selection: model.configBinding(\.badgeStyle))
+                    .accessibilityIdentifier("badgeStyle")
             }
             SettingRow(
                 "When there's nothing new",
@@ -95,12 +89,6 @@ private struct MenuBarSection: View {
             }
         }
     }
-
-    private static let badgeHints: [BadgeStyle: Text] = [
-        .number: Text("Number next to the icon."),
-        .redBadge: Text("Red badge on the icon."),
-        .iconOnly: Text("Only the icon, with no alerts or arrows."),
-    ]
 
     private static let nothingNewHints: [NothingNewMode: Text] = [
         .show: Text("The icon stays as it is."),
@@ -132,20 +120,17 @@ private struct AlertsSection: View {
     }
 }
 
-private struct LoginItemRow: View {
-    private static let errorDuration: Duration = .seconds(5)
-
+struct LoginItemRow: View {
     let model: AppModel
-    @State private var error: String?
-    @State private var errorTask: Task<Void, Never>?
 
     private var status: SMAppService.Status { model.loginItemStatus }
+    private var normalHint: Text { Text("The badges stay in the menu bar after a restart.") }
     private var approvalHint: Text { Text("Needs your approval in System Settings.") }
-    private var notFoundHint: Text { Text("Move \(AppInfo.name) to the Applications folder to use this.") }
+    private var notInApplicationsHint: Text { Text("Move \(AppInfo.name) to the Applications folder to use this.") }
 
     var body: some View {
-        SettingRow(title: "Launch at login", hintVariants: [approvalHint, notFoundHint]) {
-            if let error {
+        SettingRow(title: "Launch at login", hintVariants: [normalHint, approvalHint, notInApplicationsHint]) {
+            if let error = model.loginItemUnregisterError ?? model.loginItemRegisterError {
                 Text(verbatim: error)
             } else if status == .requiresApproval {
                 Label {
@@ -154,18 +139,20 @@ private struct LoginItemRow: View {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.yellow)
                 }
-            } else if status == .notFound {
-                notFoundHint
+            } else if !LoginItem.isInApplicationsFolder {
+                notInApplicationsHint
+            } else {
+                normalHint
             }
         } control: {
             HStack {
                 if status == .requiresApproval {
                     Button("Open Login Items", action: LoginItem.openSystemSettings)
                 }
-                Toggle("Launch at login", isOn: Binding(get: { isOn }, set: { setEnabled($0) }))
+                Toggle("Launch at login", isOn: Binding(get: { isOn }, set: { model.setLoginItemEnabled($0) }))
                     .toggleStyle(.switch)
                     .labelsHidden()
-                    .disabled(status == .notFound)
+                    .disabled(!canEnable && !isOn)
                     .accessibilityIdentifier("launchAtLogin")
             }
         }
@@ -175,23 +162,8 @@ private struct LoginItemRow: View {
         status == .enabled || status == .requiresApproval
     }
 
-    private func setEnabled(_ isEnabled: Bool) {
-        do {
-            try LoginItem.setEnabled(isEnabled)
-        } catch {
-            show(error.localizedDescription)
-        }
-        model.refreshLoginItemStatus()
-    }
-
-    private func show(_ message: String) {
-        error = message
-        errorTask?.cancel()
-        errorTask = Task {
-            try? await Task.sleep(for: Self.errorDuration)
-            guard !Task.isCancelled else { return }
-            error = nil
-        }
+    private var canEnable: Bool {
+        LoginItem.isInApplicationsFolder && model.loginItemRegisterError == nil
     }
 }
 
@@ -229,7 +201,7 @@ private struct ShortcutRow: View {
     }
 }
 
-private extension AppModel {
+extension AppModel {
     func configBinding<Value: Equatable>(_ keyPath: WritableKeyPath<Config, Value>) -> Binding<Value> {
         Binding {
             self.config[keyPath: keyPath]
