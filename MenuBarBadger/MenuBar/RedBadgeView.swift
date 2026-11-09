@@ -1,8 +1,6 @@
 import AppKit
 
 /// The red capsule of the Red badge style. No system control draws a badge on a status item.
-/// It draws its text itself: on macOS 27, an `NSTextField` in a status item button marks the button dirty at each
-/// menu bar snapshot, so the snapshots repeat each 0.1 s and take the main thread (#8).
 final class RedBadgeView: NSView {
     private static let font = NSFont.systemFont(ofSize: 8, weight: .bold)
     private static let extraWidth: CGFloat = 4
@@ -16,7 +14,7 @@ final class RedBadgeView: NSView {
     static let topOverhang: CGFloat = 0
 
     static func size(of text: String) -> NSSize {
-        let textWidth = (text as NSString).size(withAttributes: [.font: font]).width
+        let textWidth = (text as NSString).size(withAttributes: textAttributes).width
         let height = (font.ascender - font.descender + extraHeight).rounded(.up)
         return NSSize(width: max((textWidth + extraWidth).rounded(.up), height), height: height)
     }
@@ -45,15 +43,20 @@ final class RedBadgeView: NSView {
     @available(*, unavailable)
     required init?(coder: NSCoder) { nil }
 
+    // Not an `NSTextField`: on macOS 27, a text field in a status item button marks the button dirty at each menu
+    // bar snapshot, so the snapshots repeat each 0.1 s and take the main thread (#8).
     override func draw(_ dirtyRect: NSRect) {
+        let radius = bounds.height / 2
         NSColor.systemRed.setFill()
-        NSBezierPath(roundedRect: bounds, xRadius: bounds.height / 2, yRadius: bounds.height / 2).fill()
+        NSBezierPath(roundedRect: bounds, xRadius: radius, yRadius: radius).fill()
         let string = text as NSString
-        let size = string.size(withAttributes: Self.textAttributes)
-        string.draw(
-            at: NSPoint(x: bounds.midX - size.width / 2, y: bounds.midY - size.height / 2),
-            withAttributes: Self.textAttributes
+        let textSize = string.size(withAttributes: Self.textAttributes)
+        let textRect = NSRect(
+            x: bounds.midX - textSize.width / 2, y: bounds.midY - textSize.height / 2,
+            width: textSize.width, height: textSize.height
         )
+        let origin = backingAlignedRect(textRect, options: .alignAllEdgesNearest).origin
+        string.draw(at: origin, withAttributes: Self.textAttributes)
     }
 
     override func hitTest(_ point: NSPoint) -> NSView? { nil }
