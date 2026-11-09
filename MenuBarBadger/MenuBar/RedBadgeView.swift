@@ -10,8 +10,8 @@ final class RedBadgeView: NSView {
     /// The capsule extends past the top-right corner of the icon, as a Dock badge does, so that it covers less of
     /// the icon.
     static let trailingOverhang: CGFloat = 5
-    /// On a display without the focus, macOS clipped the top of the capsule at a 2 pt overhang (#6).
-    static let topOverhang: CGFloat = 1
+    /// 0, because on a display without the focus, macOS clips the item to the height of the icon (#6).
+    static let topOverhang: CGFloat = 0
 
     static func size(of text: String) -> NSSize {
         let textWidth = (text as NSString).size(withAttributes: [.font: font]).width
