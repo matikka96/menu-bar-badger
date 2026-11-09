@@ -10,8 +10,7 @@ final class RedBadgeView: NSView {
     /// The capsule extends past the top-right corner of the icon, as a Dock badge does, so that it covers less of
     /// the icon.
     static let trailingOverhang: CGFloat = 5
-    /// A menu bar without a notch is 24 pt high, 1 pt above the 22 pt icon. On a display without the focus, macOS
-    /// clips the item to that height.
+    /// On a display without the focus, macOS clipped the top of the capsule at a 2 pt overhang (#6).
     static let topOverhang: CGFloat = 1
 
     static func size(of text: String) -> NSSize {
