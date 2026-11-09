@@ -1,6 +1,8 @@
 import AppKit
 
 /// The red capsule of the Red badge style. No system control draws a badge on a status item.
+/// It draws its text itself: on macOS 27, an `NSTextField` in a status item button marks the button dirty at each
+/// menu bar snapshot, so the snapshots repeat each 0.1 s and take the main thread (#8).
 final class RedBadgeView: NSView {
     private static let font = NSFont.systemFont(ofSize: 8, weight: .bold)
     private static let extraWidth: CGFloat = 4
@@ -23,45 +25,35 @@ final class RedBadgeView: NSView {
         size(of: text).width <= maxWidth
     }
 
-    private let label = NSTextField(labelWithString: "")
+    private static let textAttributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.white]
 
     var text = "" {
         didSet {
-            label.stringValue = text
+            needsDisplay = true
             invalidateIntrinsicContentSize()
         }
     }
 
     override var intrinsicContentSize: NSSize { Self.size(of: text) }
-    override var wantsUpdateLayer: Bool { true }
 
     override init(frame: NSRect) {
         super.init(frame: frame)
-        wantsLayer = true
         translatesAutoresizingMaskIntoConstraints = false
         setAccessibilityElement(false)
-        label.font = Self.font
-        label.textColor = .white
-        label.alignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(label)
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-        ])
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) { nil }
 
-    override func updateLayer() {
-        layer?.backgroundColor = NSColor.systemRed.cgColor
-        layer?.cornerRadius = bounds.height / 2
-    }
-
-    override func layout() {
-        super.layout()
-        needsDisplay = true
+    override func draw(_ dirtyRect: NSRect) {
+        NSColor.systemRed.setFill()
+        NSBezierPath(roundedRect: bounds, xRadius: bounds.height / 2, yRadius: bounds.height / 2).fill()
+        let string = text as NSString
+        let size = string.size(withAttributes: Self.textAttributes)
+        string.draw(
+            at: NSPoint(x: bounds.midX - size.width / 2, y: bounds.midY - size.height / 2),
+            withAttributes: Self.textAttributes
+        )
     }
 
     override func hitTest(_ point: NSPoint) -> NSView? { nil }
