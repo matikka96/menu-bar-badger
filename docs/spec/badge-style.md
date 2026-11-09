@@ -6,7 +6,8 @@ One global setting, `badgeStyle`, with three values. A change applies to all ite
 
 - No text next to the icon. A red capsule with white text shows on the top-right corner of the icon.
 - The icon keeps its full size with a badge. As a Dock badge does, the capsule extends 5 pt past the right
-  edge of the icon and 2 pt past its top edge, so that it covers less of the icon.
+  edge of the icon, so that it covers less of the icon. The capsule does not extend past the top edge: on a
+  display without the focus, macOS clips the item to the height of the icon.
 - The capsule: the system red colour; the text in an 8 pt bold system font; a height of the text plus 4 pt;
   a width of the text plus 4 pt, but never narrower than its height, so a single digit gives a circle.
 - **Label rules**, in this order:
