@@ -14,7 +14,7 @@ final class RedBadgeView: NSView {
     static let topOverhang: CGFloat = 0
 
     static func size(of text: String) -> NSSize {
-        let textWidth = (text as NSString).size(withAttributes: [.font: font]).width
+        let textWidth = (text as NSString).size(withAttributes: textAttributes).width
         let height = (font.ascender - font.descender + extraHeight).rounded(.up)
         return NSSize(width: max((textWidth + extraWidth).rounded(.up), height), height: height)
     }
@@ -23,45 +23,40 @@ final class RedBadgeView: NSView {
         size(of: text).width <= maxWidth
     }
 
-    private let label = NSTextField(labelWithString: "")
+    private static let textAttributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.white]
 
     var text = "" {
         didSet {
-            label.stringValue = text
+            needsDisplay = true
             invalidateIntrinsicContentSize()
         }
     }
 
     override var intrinsicContentSize: NSSize { Self.size(of: text) }
-    override var wantsUpdateLayer: Bool { true }
 
     override init(frame: NSRect) {
         super.init(frame: frame)
-        wantsLayer = true
         translatesAutoresizingMaskIntoConstraints = false
         setAccessibilityElement(false)
-        label.font = Self.font
-        label.textColor = .white
-        label.alignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(label)
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-        ])
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) { nil }
 
-    override func updateLayer() {
-        layer?.backgroundColor = NSColor.systemRed.cgColor
-        layer?.cornerRadius = bounds.height / 2
-    }
-
-    override func layout() {
-        super.layout()
-        needsDisplay = true
+    // Not an `NSTextField`: on macOS 27, a text field in a status item button marks the button dirty at each menu
+    // bar snapshot, so the snapshots repeat each 0.1 s and take the main thread (#8).
+    override func draw(_ dirtyRect: NSRect) {
+        let radius = bounds.height / 2
+        NSColor.systemRed.setFill()
+        NSBezierPath(roundedRect: bounds, xRadius: radius, yRadius: radius).fill()
+        let string = text as NSString
+        let textSize = string.size(withAttributes: Self.textAttributes)
+        let textRect = NSRect(
+            x: bounds.midX - textSize.width / 2, y: bounds.midY - textSize.height / 2,
+            width: textSize.width, height: textSize.height
+        )
+        let origin = backingAlignedRect(textRect, options: .alignAllEdgesNearest).origin
+        string.draw(at: origin, withAttributes: Self.textAttributes)
     }
 
     override func hitTest(_ point: NSPoint) -> NSView? { nil }
