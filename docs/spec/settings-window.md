@@ -8,7 +8,7 @@
 - An `NSWindowController` owns the window. Each tab is a SwiftUI view in an `NSHostingController`, in an
   `NSTabViewController` that shows no tabs of its own.
 - The window has a close button. Minimize and zoom are disabled. The width is fixed. The height fits the
-  selected tab, and a tab change animates the height.
+  selected tab, and a tab change animates the height. With Reduce Motion on, the height changes at once.
 - The window remembers its frame (autosave name `Settings`) and its last tab, also across relaunches. The
   first show centres it.
 - Contents: [apps-tab.md](apps-tab.md) and [general-tab.md](general-tab.md).

@@ -213,7 +213,7 @@ private final class SettingsTabViewController: NSTabViewController {
         var frame = window.frameRect(forContentRect: NSRect(origin: content.origin, size: size))
         frame.origin.y = window.frame.maxY - frame.height
         guard frame != window.frame else { return }
-        guard animated else {
+        guard animated, !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion else {
             window.setFrame(frame, display: true)
             return
         }
