@@ -15,10 +15,13 @@ if [ -n "$(git status --porcelain)" ]; then
     exit 1
 fi
 branch=$(git rev-parse --abbrev-ref HEAD)
-if [ "$branch" != main ]; then
-    echo "make install stopped: the branch is '$branch'. Install from 'main' only." >&2
-    exit 1
-fi
+case "$branch" in
+    main | dev) ;;
+    *)
+        echo "make install stopped: the branch is '$branch'. Install from 'main' or 'dev' only." >&2
+        exit 1
+        ;;
+esac
 
 xcodebuild -project "$project" -scheme "$scheme" -configuration Release -derivedDataPath "$derived" \
     CURRENT_PROJECT_VERSION="$build_number" -quiet build

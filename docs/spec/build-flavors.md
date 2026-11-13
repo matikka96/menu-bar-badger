@@ -36,7 +36,7 @@
 | `make test` | Run `swift test` in `Packages/BadgerCore`. |
 | `make ui-test` | Run the XCUITest flows. It takes the keyboard focus. |
 | `make e2e` | Build the fixtures and run the e2e smoke scenarios. It needs the Accessibility permission for the test host and takes the keyboard focus. |
-| `make install` | Build Release, quit the running Release copy (10 s limit), replace `/Applications/MenuBarBadger.app` with a roll-back on failure, and launch it. It refuses to run with a dirty tree or on a branch other than `main`. |
+| `make install` | Build Release, quit the running Release copy (10 s limit), replace `/Applications/MenuBarBadger.app` with a roll-back on failure, and launch it. It refuses to run with a dirty tree or on a branch other than `main` or `dev`. |
 | `make worktree NAME=<name>` | Create the worktree `/Users/masa/Documents/repos/worktrees/menu-bar-badger-<name>` on a new branch `<name>` from `dev`, and copy the local files that git does not track (`AGENTS.md`, `.local/` and `Config/Local.xcconfig`, when they exist) into it. |
 | `make release` | The release pipeline on the local Mac. See [ci-and-release.md](ci-and-release.md). |
 
