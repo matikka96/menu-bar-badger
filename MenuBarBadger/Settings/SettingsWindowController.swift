@@ -213,6 +213,15 @@ private final class SettingsTabViewController: NSTabViewController {
         var frame = window.frameRect(forContentRect: NSRect(origin: content.origin, size: size))
         frame.origin.y = window.frame.maxY - frame.height
         guard frame != window.frame else { return }
-        window.setFrame(frame, display: true, animate: animated)
+        guard animated, !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion else {
+            window.setFrame(frame, display: true)
+            return
+        }
+        // `setFrame(_:display:animate:)` blocks the main thread until the resize ends, so the Liquid Glass
+        // bubble of the tab picker stops moving.
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = window.animationResizeTime(frame)
+            window.animator().setFrame(frame, display: true)
+        }
     }
 }
