@@ -24,7 +24,7 @@ ui-test: ## Run the XCUITest flows of the settings window (takes the keyboard fo
 e2e: build ## Build the fixtures and run the e2e smoke scenarios (takes the keyboard focus)
 	python3 -I E2E/run.py run
 
-install: ## Build Release and replace /Applications/MenuBarBadger.app (clean main branch only)
+install: ## Build Release and replace /Applications/MenuBarBadger.app (clean main or dev branch only)
 	@Scripts/install.sh $(PROJECT) $(SCHEME) $(DERIVED) $(BUILD_NUMBER)
 
 worktree: ## Create a worktree and a branch from dev: make worktree NAME=<name>
